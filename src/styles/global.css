@@ -1,1 +1,182 @@
 @import "tailwindcss";
+
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Noto+Sans+HK:wght@400;500;600&display=swap');
+
+/* Dark mode: class strategy */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Design tokens */
+@theme {
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'Noto Sans HK', system-ui, sans-serif;
+
+  --color-surface: #FFFFFF;
+  --color-surface-dark: #242424;
+  --color-bg: #FAFAF8;
+  --color-bg-dark: #1A1A1A;
+  --color-border: #E8E4DF;
+  --color-border-dark: #333333;
+  --color-accent: #5B8A8A;
+  --color-accent-hover: #4A7575;
+  --color-accent-dark: #7AAEAE;
+  --color-accent-hover-dark: #8ABFBF;
+
+  --shadow-card: 0 2px 12px rgba(41, 37, 36, 0.06);
+  --shadow-card-hover: 0 4px 20px rgba(41, 37, 36, 0.10);
+}
+
+/* Base styles */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-bg);
+  color: #292524;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dark body {
+  background-color: var(--color-bg-dark);
+  color: #F5F0EB;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+}
+
+/* Fade-in animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s ease forwards;
+}
+
+/* Scroll reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Reading progress bar */
+#reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: var(--color-accent);
+  z-index: 100;
+  transition: width 0.1s linear;
+}
+
+.dark #reading-progress {
+  background: var(--color-accent-dark);
+}
+
+/* Prose improvements */
+.prose {
+  font-family: var(--font-body);
+  line-height: 1.8;
+}
+
+.prose h1, .prose h2, .prose h3 {
+  font-family: var(--font-display);
+}
+
+/* Card hover */
+.post-card {
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.dark .post-card {
+  background-color: var(--color-surface-dark);
+  border-color: var(--color-border-dark);
+}
+
+.post-card:hover {
+  box-shadow: var(--shadow-card-hover);
+  border-color: #D4CFC9;
+}
+
+/* Button transitions */
+button, a {
+  transition: all 0.15s ease;
+}
+
+/* Dark mode toggle button */
+#dark-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  background: transparent;
+  cursor: pointer;
+  color: #78716C;
+}
+
+#dark-toggle:hover {
+  background: #F5F0EB;
+  color: #292524;
+}
+
+.dark #dark-toggle {
+  color: #A8A29E;
+  border-color: var(--color-border-dark);
+}
+
+.dark #dark-toggle:hover {
+  background: #333333;
+  color: #F5F0EB;
+}
+
+/* Share button styles */
+.share-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  background: white;
+  color: #78716C;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.share-btn:hover {
+  background: #F5F0EB;
+  border-color: #D4CFC9;
+  color: #292524;
+}
+
+.dark .share-btn {
+  background: var(--color-surface-dark);
+  border-color: var(--color-border-dark);
+  color: #A8A29E;
+}
+
+.dark .share-btn:hover {
+  background: #333333;
+  color: #F5F0EB;
+}

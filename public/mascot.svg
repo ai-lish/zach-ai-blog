@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200" fill="none">
+  <!-- Background decoration -->
+  <rect width="400" height="200" fill="#F0EFEC" rx="16"/>
+  
+  <!-- Floating math symbols -->
+  <text x="40" y="50" font-size="20" fill="#C4BFB8" font-family="serif">∑</text>
+  <text x="350" y="45" font-size="18" fill="#C4BFB8" font-family="serif">π</text>
+  <text x="60" y="160" font-size="16" fill="#C4BFB8" font-family="serif">x²</text>
+  <text x="330" y="165" font-size="16" fill="#C4BFB8" font-family="serif">√</text>
+  <text x="180" y="35" font-size="14" fill="#D4CFC9" font-family="sans-serif">AI</text>
+  
+  <!-- Mascot: Zach Mini (math teacher + AI) -->
+  <g transform="translate(140, 45)">
+    <!-- Body/rosy cheeks area -->
+    <ellipse cx="60" cy="100" rx="45" ry="50" fill="#E8E4DF"/>
+    
+    <!-- Head -->
+    <circle cx="60" cy="70" r="50" fill="#F5F0EB" stroke="#E8E4DF" stroke-width="2"/>
+    
+    <!-- Glasses -->
+    <rect x="30" y="58" width="24" height="18" rx="4" fill="none" stroke="#5B8A8A" stroke-width="2.5"/>
+    <rect x="66" y="58" width="24" height="18" rx="4" fill="none" stroke="#5B8A8A" stroke-width="2.5"/>
+    <line x1="54" y1="67" x2="66" y2="67" stroke="#5B8A8A" stroke-width="2.5"/>
+    <line x1="30" y1="67" x2="20" y2="65" stroke="#5B8A8A" stroke-width="2.5"/>
+    <line x1="90" y1="67" x2="100" y2="65" stroke="#5B8A8A" stroke-width="2.5"/>
+    
+    <!-- Eyes (dots behind glasses) -->
+    <circle cx="42" cy="67" r="4" fill="#292524"/>
+    <circle cx="78" cy="67" r="4" fill="#292524"/>
+    
+    <!-- Smile -->
+    <path d="M45 85 Q60 95 75 85" stroke="#292524" stroke-width="2" fill="none" stroke-linecap="round"/>
+    
+    <!-- Hair -->
+    <path d="M20 55 Q30 20 60 18 Q90 20 100 55" fill="#78716C"/>
+    
+    <!-- AI spark/star (top right) -->
+    <g transform="translate(95, 15)">
+      <path d="M10 0 L12 7 L20 7 L14 11 L16 18 L10 14 L4 18 L6 11 L0 7 L8 7 Z" fill="#5B8A8A" opacity="0.8"/>
+    </g>
+    
+    <!-- Tablet in hands -->
+    <rect x="20" y="95" width="50" height="35" rx="4" fill="#5B8A8A" opacity="0.9"/>
+    <rect x="24" y="99" width="42" height="27" rx="2" fill="#F5F0EB"/>
+    <text x="45" y="116" font-size="10" fill="#5B8A8A" text-anchor="middle" font-family="sans-serif">AI</text>
+  </g>
+  
+  <!-- Text area -->
+  <text x="200" y="72" font-size="18" fill="#292524" font-family="'Noto Sans HK', sans-serif" font-weight="600">用 AI 探索數學</text>
+  <text x="200" y="100" font-size="14" fill="#78716C" font-family="'Noto Sans HK', sans-serif">用數學理解世界</text>
+  
+  <text x="200" y="135" font-size="11" fill="#A8A29E" font-family="'Noto Sans HK', sans-serif">HKDSE 數學 | AI 教育科技 | 學習方法</text>
+</svg>

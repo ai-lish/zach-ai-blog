@@ -3,56 +3,66 @@ import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout title="About - Zach's Blog" description="Zach 是香港數學老師，熱衷 AI 工具與教育科技">
-  <article class="bg-white rounded-lg border border-stone-200 p-8">
-    <h1 class="text-3xl font-bold text-stone-900 mb-6">關於我</h1>
+  <article class="bg-white rounded-xl border border-stone-200 p-8 dark:bg-[#242424] dark:border-[#333333]">
+    <h1 class="text-3xl font-bold text-stone-900 mb-6 dark:text-[#F5F0EB]" style="font-family: 'Playfair Display', Georgia, serif;">
+      關於我
+    </h1>
 
-    <div class="prose prose-stone max-w-none space-y-4">
-      <p class="text-lg text-stone-700 leading-relaxed">
-        大家好，我係 <strong>Zach Li</strong>，係香港嘅數學老師，主要教授 HKDSE 數學。
+    <div class="prose prose-stone max-w-none space-y-4 dark:prose-invert">
+      <p class="text-lg text-stone-700 leading-relaxed dark:text-[#A8A29E]">
+        大家好，我係 <strong class="text-stone-900 dark:text-[#F5F0EB]">Zach Li</strong>，係香港嘅數學老師，主要教授 HKDSE 數學。
       </p>
 
-      <h2 class="text-xl font-semibold text-stone-800 mt-6">我係點解開始接觸 AI 嘅？</h2>
-      <p class="text-stone-600 leading-relaxed">
+      <h2 class="text-xl font-semibold text-stone-800 mt-6 dark:text-[#F5F0EB]" style="font-family: 'Playfair Display', Georgia, serif;">
+        我係點解開始接觸 AI 嘅？
+      </h2>
+      <p class="text-stone-600 leading-relaxed dark:text-[#A8A29E]">
         作為老師，我不停喺度諗點樣可以令學生學得更有效率。大約兩年前開始接觸 AI 工具，發現佢哋可以幫我做一啲之前要好長時間先做到嘅嘢——例如分析試卷、搵學習資源、或者個人化練習。
       </p>
 
-      <h2 class="text-xl font-semibold text-stone-800 mt-6">我關心啲咩？</h2>
-      <ul class="list-disc list-inside text-stone-600 space-y-2">
+      <h2 class="text-xl font-semibold text-stone-800 mt-6 dark:text-[#F5F0EB]" style="font-family: 'Playfair Display', Georgia, serif;">
+        我關心啲咩？
+      </h2>
+      <ul class="list-disc list-inside text-stone-600 space-y-2 dark:text-[#A8A29E]">
         <li>點樣用 AI 幫助學生學得更好</li>
         <li>HKDSE 數學考試技巧與題目分析</li>
         <li>教育科技嘅實際應用</li>
         <li>個人化學習嘅可能性</li>
       </ul>
 
-      <h2 class="text-xl font-semibold text-stone-800 mt-6">我整過啲咩？</h2>
-      <ul class="list-disc list-inside text-stone-600 space-y-2">
+      <h2 class="text-xl font-semibold text-stone-800 mt-6 dark:text-[#F5F0EB]" style="font-family: 'Playfair Display', Georgia, serif;">
+        我整過啲咩？
+      </h2>
+      <ul class="list-disc list-inside text-stone-600 space-y-2 dark:text-[#A8A29E]">
         <li>
-          <a href="https://ai-lish.github.io/ai-learning" target="_blank" rel="noopener" class="text-stone-600 hover:text-stone-900 underline">
+          <a href="https://ai-lish.github.io/ai-learning" target="_blank" rel="noopener" class="text-[#5B8A8A] hover:text-[#4A7575] underline dark:text-[#7AAEAE] dark:hover:text-[#8ABFBF]">
             ai-learning
           </a>
           — AI 學習資源大全
         </li>
         <li>
-          <a href="https://ai-lish.github.io/virtual-office" target="_blank" rel="noopener" class="text-stone-600 hover:text-stone-900 underline">
+          <a href="https://ai-lish.github.io/virtual-office" target="_blank" rel="noopener" class="text-[#5B8A8A] hover:text-[#4A7575] underline dark:text-[#7AAEAE] dark:hover:text-[#8ABFBF]">
             Virtual Office
           </a>
           — 網上學習社群
         </li>
         <li>
-          <a href="https://ai-lish.github.io/lsc-ole-s1-2026" target="_blank" rel="noopener" class="text-stone-600 hover:text-stone-900 underline">
+          <a href="https://ai-lish.github.io/lsc-ole-s1-2026" target="_blank" rel="noopener" class="text-[#5B8A8A] hover:text-[#4A7575] underline dark:text-[#7AAEAE] dark:hover:text-[#8ABFBF]">
             少康 OLE 網站
           </a>
           — 高中延伸學習活動
         </li>
       </ul>
 
-      <h2 class="text-xl font-semibold text-stone-800 mt-6">聯絡我</h2>
-      <p class="text-stone-600">
+      <h2 class="text-xl font-semibold text-stone-800 mt-6 dark:text-[#F5F0EB]" style="font-family: 'Playfair Display', Georgia, serif;">
+        聯絡我
+      </h2>
+      <p class="text-stone-600 dark:text-[#A8A29E]">
         如果你想傾吓關於教育、AI 或者合作，可以訂閱我的 Newsletter 或者透過 GitHub 搵我。
       </p>
 
       <div class="flex gap-4 mt-6">
-        <a href="https://github.com/ai-lish" target="_blank" rel="noopener" class="inline-flex items-center gap-2 text-stone-600 hover:text-stone-900">
+        <a href="https://github.com/ai-lish" target="_blank" rel="noopener" class="inline-flex items-center gap-2 text-stone-600 hover:text-stone-900 dark:text-[#A8A29E] dark:hover:text-[#F5F0EB]">
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
           GitHub
         </a>
