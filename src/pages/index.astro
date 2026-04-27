@@ -9,7 +9,7 @@ const posts = (await getCollection('posts')).sort(
 
 <Layout title="Zach's Blog - AI 與數學學習">
   <!-- Hero Section -->
-  <section class="mb-10">
+  <section class="mb-10 hero-section">
     <div class="bg-white rounded-xl border border-stone-200 overflow-hidden shadow-sm dark:bg-[#242424] dark:border-[#333333]">
       <div class="md:flex">
         <div class="md:w-1/2 p-6 md:p-8 flex flex-col justify-center">
@@ -20,7 +20,7 @@ const posts = (await getCollection('posts')).sort(
             HKDSE 數學 | AI 教育科技 | 學習方法
           </p>
           <div class="mt-4 flex items-center gap-3">
-            <img src="/mascot.svg" alt="Zach Mini" class="h-16 w-auto opacity-90" />
+            <img src="/mascot.svg" alt="Zach Mini" class="h-16 w-auto opacity-90 mascot-sm" />
             <span class="text-xs text-stone-400 dark:text-[#78716C]">嗨，我係 Zach 👋</span>
           </div>
         </div>
@@ -47,9 +47,9 @@ const posts = (await getCollection('posts')).sort(
           style={`animation-delay: ${index * 0.1}s`}
         >
           <a href={`/posts/${post.id}/`} class="block md:flex">
-            <div class="md:w-48 h-40 md:h-auto bg-[#F0EFEC] dark:bg-[#1A1A1A] flex-shrink-0">
+            <div class="md:w-48 h-40 md:h-auto bg-[#F0EFEC] dark:bg-[#1A1A1A] flex-shrink-0 card-img">
               <img 
-                src={`https://picsum.photos/seed/${post.id}/400/320`}
+                src="/images/placeholder.svg"
                 alt={post.data.title}
                 class="w-full h-full object-cover"
                 loading="lazy"
