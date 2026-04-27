@@ -1,0 +1,46 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('posts')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+---
+
+<Layout title="Zach's Blog - AI 與數學學習">
+  <section>
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-stone-900 mb-2">Zach's Blog</h1>
+      <p class="text-stone-500">AI 工具、數學教育、HKDSE 學習</p>
+    </div>
+
+    <div class="space-y-6">
+      {posts.map((post) => (
+        <article class="bg-white rounded-lg border border-stone-200 p-6 hover:border-stone-300 transition-colors">
+          <a href={`/posts/${post.id}/`} class="block">
+            <h2 class="text-xl font-semibold text-stone-900 mb-2 hover:text-stone-600 transition-colors">
+              {post.data.title}
+            </h2>
+            <p class="text-stone-500 text-sm mb-3">
+              {post.data.pubDate.toLocaleDateString('zh-Hant', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+              })}
+            </p>
+            {post.data.description && (
+              <p class="text-stone-600">{post.data.description}</p>
+            )}
+            <span class="text-stone-400 text-sm mt-3 inline-block hover:text-stone-600 transition-colors">
+              閱讀全文 →
+            </span>
+          </a>
+        </article>
+      ))}
+
+      {posts.length === 0 && (
+        <p class="text-stone-500 text-center py-12">暫時未有文章，敬請期待！</p>
+      )}
+    </div>
+  </section>
+</Layout>

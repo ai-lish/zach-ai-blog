@@ -1,0 +1,42 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<Layout title={post.data.title} description={post.data.description}>
+  <article class="bg-white rounded-lg border border-stone-200 p-8">
+    <header class="mb-8 border-b border-stone-200 pb-6">
+      <h1 class="text-3xl font-bold text-stone-900 mb-3">
+        {post.data.title}
+      </h1>
+      <p class="text-stone-500 text-sm">
+        {post.data.pubDate.toLocaleDateString('zh-Hant', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        })}
+      </p>
+    </header>
+
+    <div class="prose prose-stone max-w-none">
+      <Content />
+    </div>
+
+    <footer class="mt-10 pt-6 border-t border-stone-200">
+      <a href="/" class="text-stone-500 hover:text-stone-700 transition-colors">
+        ← 返回首頁
+      </a>
+    </footer>
+  </article>
+</Layout>
