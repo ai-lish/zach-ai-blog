@@ -2,103 +2,91 @@
 import Layout from '../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
 const posts = (await getCollection('posts')).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
+const featuredPost = posts[0];
+const otherPosts = posts.slice(1);
+const formatDate = (date: Date) => date.toLocaleDateString('zh-Hant', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
 ---
 
-<Layout title="Zach's Blog - AI 與數學學習">
-  <!-- Hero Section -->
-  <section class="mb-10 hero-section">
-    <div class="bg-white rounded-xl border border-stone-200 overflow-hidden shadow-sm dark:bg-[#242424] dark:border-[#333333]">
-      <div class="md:flex">
-        <div class="md:w-1/2 p-6 md:p-8 flex flex-col justify-center">
-          <h1 class="text-2xl md:text-3xl font-bold text-stone-900 mb-3 dark:text-[#F5F0EB]" style="font-family: 'Playfair Display', Georgia, serif;">
-            用 AI 探索數學<br/>用數學理解世界
-          </h1>
-          <p class="text-stone-500 text-sm md:text-base dark:text-[#A8A29E]">
-            HKDSE 數學 | AI 教育科技 | 學習方法
-          </p>
-          <div class="mt-4 flex items-center gap-3">
-            <img src="/mascot.svg" alt="Zach Mini" class="h-16 w-auto opacity-90 mascot-sm" />
-            <span class="text-xs text-stone-400 dark:text-[#78716C]">嗨，我係 Zach 👋</span>
-          </div>
-        </div>
-        <div class="md:w-1/2 bg-[#F0EFEC] dark:bg-[#1A1A1A] flex items-center justify-center p-4">
-          <img src="/mascot.svg" alt="Zach Mini - AI Math Teacher" class="w-full max-w-xs" />
-        </div>
+<Layout title="Zach's Blog - AI 與數學學習" description="Zach 的 AI 與數學學習部落格">
+  <section class="home-intro" aria-labelledby="home-title">
+    <div>
+      <p class="eyebrow">AI 工具 · 數學學習</p>
+      <h1 id="home-title">把複雜工具，寫成可重用的做法。</h1>
+      <p class="home-intro-copy">
+        記錄實際試過的工具、流程與判斷，讓下一次遇到同一個問題時，可以少走一點彎路。
+      </p>
+    </div>
+    <p class="home-intro-note">
+      <span>更新節奏</span>
+      有新實驗，就寫一篇。
+    </p>
+  </section>
+
+  {featuredPost && (
+    <section class="featured-section" aria-labelledby="featured-title">
+      <div class="section-heading">
+        <p class="section-kicker">最新實驗</p>
+        <span class="section-count">{formatDate(featuredPost.data.pubDate)}</span>
       </div>
-    </div>
-  </section>
 
-  <!-- Posts Section -->
-  <section>
-    <div class="mb-6 flex items-center justify-between">
-      <h2 class="text-xl font-semibold text-stone-800 dark:text-[#F5F0EB]" style="font-family: 'Playfair Display', Georgia, serif;">
-        最新文章
-      </h2>
-      <span class="text-xs text-stone-400 dark:text-[#78716C]">{posts.length} 篇</span>
-    </div>
+      <a class="feature-story" href={`${base}posts/${featuredPost.id}/`}>
+        <div class="feature-media">
+          {featuredPost.data.cover ? (
+            <img
+              src={`${base}${featuredPost.data.cover}`}
+              alt={featuredPost.data.title}
+              loading="eager"
+            />
+          ) : (
+            <img src={`${base}images/placeholder.svg`} alt="" loading="eager" />
+          )}
+        </div>
+        <div class="feature-copy">
+          <p class="post-label">本地 AI 實戰</p>
+          <h2 id="featured-title">{featuredPost.data.title}</h2>
+          {featuredPost.data.description && (
+            <p class="feature-description">{featuredPost.data.description}</p>
+          )}
+          <span class="read-link">閱讀全文 <span aria-hidden="true">↗</span></span>
+        </div>
+      </a>
+    </section>
+  )}
 
-    <div class="space-y-6" id="posts-list">
-      {posts.map((post, index) => (
-        <article 
-          class="post-card bg-white rounded-xl border border-stone-200 overflow-hidden shadow-sm hover:shadow-md reveal dark:bg-[#242424] dark:border-[#333333]"
-          style={`animation-delay: ${index * 0.1}s`}
-        >
-          <a href={`/posts/${post.id}/`} class="block md:flex">
-            <div class="md:w-48 h-40 md:h-auto bg-[#F0EFEC] dark:bg-[#1A1A1A] flex-shrink-0 card-img">
-              <img 
-                src="/images/placeholder.svg"
-                alt={post.data.title}
-                class="w-full h-full object-cover"
-                loading="lazy"
-              />
-            </div>
-            <div class="p-5 flex-1">
-              <h3 class="text-lg font-semibold text-stone-900 mb-2 hover:text-[#5B8A8A] transition-colors dark:text-[#F5F0EB] dark:hover:text-[#7AAEAE]">
-                {post.data.title}
-              </h3>
-              <p class="text-stone-500 text-xs mb-3 dark:text-[#A8A29E]">
-                {post.data.pubDate.toLocaleDateString('zh-Hant', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
-              </p>
-              {post.data.description && (
-                <p class="text-stone-600 text-sm leading-relaxed dark:text-[#A8A29E] line-clamp-2">
-                  {post.data.description}
-                </p>
-              )}
-              <span class="text-[#5B8A8A] text-sm mt-3 inline-block hover:text-[#4A7575] transition-colors dark:text-[#7AAEAE] dark:hover:text-[#8ABFBF]">
-                閱讀全文 →
-              </span>
-            </div>
+  {otherPosts.length > 0 && (
+    <section class="archive-section" aria-labelledby="archive-title">
+      <div class="section-heading">
+        <h2 id="archive-title">其他文章</h2>
+        <span class="section-count">{otherPosts.length} 篇</span>
+      </div>
+
+      <div class="post-list">
+        {otherPosts.map((post) => (
+          <a class="post-row" href={`${base}posts/${post.id}/`}>
+            <span class="post-row-arrow" aria-hidden="true">↗</span>
+            <span class="post-row-copy">
+              <span class="post-label">筆記</span>
+              <h3>{post.data.title}</h3>
+              {post.data.description && <span>{post.data.description}</span>}
+            </span>
+            <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
           </a>
-        </article>
-      ))}
+        ))}
+      </div>
+    </section>
+  )}
 
-      {posts.length === 0 && (
-        <p class="text-stone-500 text-center py-12 dark:text-[#A8A29E]">暫時未有文章，敬請期待！</p>
-      )}
-    </div>
-  </section>
-
-  <!-- Scroll reveal script -->
-  <script is:inline>
-    document.addEventListener('DOMContentLoaded', function() {
-      const reveals = document.querySelectorAll('.reveal');
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.1 });
-      
-      reveals.forEach(el => observer.observe(el));
-    });
-  </script>
+  {posts.length === 0 && (
+    <p class="empty-state">暫時未有文章。</p>
+  )}
 </Layout>

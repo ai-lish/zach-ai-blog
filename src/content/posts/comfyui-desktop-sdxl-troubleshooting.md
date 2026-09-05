@@ -2,9 +2,8 @@
 title: "ComfyUI Desktop 實戰：RTX 5080 由 CUDA 錯誤到成功生成 SDXL"
 pubDate: 2026-09-05
 description: "以 Windows 11、RTX 5080 16GB 與 Animagine XL 為例，示範本地模型路徑、第一個 SDXL workflow，以及 CUDA unknown error 的實際排查方法。"
+cover: "images/comfyui-desktop-sdxl-baseline.png"
 ---
-
-# ComfyUI Desktop 實戰：RTX 5080 由 CUDA 錯誤到成功生成 SDXL
 
 這篇文章記錄一次完整的 ComfyUI Desktop 新手實戰：由安裝後設定模型資料夾、建立第一個 SDXL workflow，到遇到 `CUDA error: unknown error`，最後在 RTX 5080 上成功生成第一張動漫風圖片。
 
@@ -56,6 +55,41 @@ C:\AI\ComfyUI-Desktop\ComfyUI        Desktop 版程式及獨立環境
 ```text
 C:\AI\ComfyUI\models\checkpoints\animagine-xl-4.0-opt.safetensors
 ```
+
+## checkpoint 與 text encoder 有甚麼分別？
+
+兩者都是模型權重，但負責的工作不同：
+
+| 類型 | 主要工作 | 常見資料夾 | 常見載入方式 |
+| --- | --- | --- | --- |
+| checkpoint | 通常包含 diffusion model、text encoder 及 VAE 的整合包 | `models/checkpoints` | `Load Checkpoint` |
+| text encoder | 把 prompt 文字轉成 conditioning，不負責直接繪圖 | `models/text_encoders`；舊 workflow 可能使用 `models/clip` | `Load CLIP` 或 `CLIPLoader` |
+| diffusion model | 根據 conditioning 逐步預測及修改 latent | `models/diffusion_models` | `Load Diffusion Model` |
+| VAE | 在 latent 與像素圖片之間編碼/解碼 | `models/vae` | `Load VAE` 或 checkpoint 內置 VAE |
+
+### 本次 Animagine XL workflow
+
+`animagine-xl-4.0-opt.safetensors` 是 SDXL checkpoint，放在：
+
+```text
+C:\AI\ComfyUI\models\checkpoints
+```
+
+使用 `Load Checkpoint` 後，node 會同時輸出 `MODEL`、`CLIP` 及 `VAE`。所以這個 workflow 不需要另放一個 SDXL text encoder；兩個 `CLIP Text Encode (Prompt)` nodes 直接使用 `Load Checkpoint` 輸出的 `CLIP`。
+
+### 甚麼時候需要獨立 text encoder？
+
+某些較新的 model 只把 diffusion model、text encoder 及 VAE 分開提供。例如一個 workflow 可能需要：
+
+```text
+Load Diffusion Model  -> MODEL
+Load CLIP             -> CLIP Text Encode
+Load VAE              -> VAE Decode
+```
+
+這時 diffusion model 應放在 `models/diffusion_models`，text encoder 應放在 `models/text_encoders`，不能互換，也不能把 text encoder 當成 checkpoint 放入 `models/checkpoints`。text encoder 必須與該 model family 匹配，例如 SDXL、Flux、Qwen Image 的 text encoder 不是通用替代品。
+
+因此，看到 ComfyUI 的 `text_encoders` 資料夾有檔案，並不代表每個 SDXL workflow 都需要手動接入；要先看 workflow 使用的是 `Load Checkpoint`，還是「分開載入 diffusion model + text encoder + VAE」的架構。
 
 ## 在 Desktop 設定模型與輸出位置
 
@@ -241,8 +275,6 @@ Using async weight offloading with 2 streams
 尺寸：1024 x 1024
 生成時間：17.79 秒
 ```
-
-![Animagine XL SDXL 本地生成結果](/images/comfyui-desktop-sdxl-baseline.png)
 
 如果你已按上一節把「共享輸出」改成 `C:\AI\ComfyUI\output`，必須重新啟動 Desktop instance；之後的新圖片才會寫入：
 

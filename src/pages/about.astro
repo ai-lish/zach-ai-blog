@@ -3,12 +3,13 @@ import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout title="About - Zach's Blog" description="Zach 是香港數學老師，熱衷 AI 工具與教育科技">
-  <article class="bg-white rounded-xl border border-stone-200 p-8 dark:bg-[#242424] dark:border-[#333333]">
-    <h1 class="text-3xl font-bold text-stone-900 mb-6 dark:text-[#F5F0EB]" style="font-family: 'Playfair Display', Georgia, serif;">
-      關於我
-    </h1>
+  <article class="article-shell">
+    <header class="article-header">
+      <p class="eyebrow">關於這個部落格</p>
+      <h1>關於我</h1>
+    </header>
 
-    <div class="prose prose-stone max-w-none space-y-4 dark:prose-invert">
+    <div class="article-prose prose prose-stone max-w-none space-y-4 dark:prose-invert">
       <p class="text-lg text-stone-700 leading-relaxed dark:text-[#A8A29E]">
         大家好，我係 <strong class="text-stone-900 dark:text-[#F5F0EB]">Zach Li</strong>，係香港嘅數學老師，主要教授 HKDSE 數學。
       </p>

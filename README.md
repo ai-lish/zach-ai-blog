@@ -2,7 +2,7 @@
 
 用 Astro 架設的個人部落格，分享 AI 與數學學習的心得。
 
-🌐 **線上版本**: https://ai-lish.github.io
+🌐 **線上版本**: https://ai-lish.github.io/zach-ai-blog/
 
 ## 主題
 
