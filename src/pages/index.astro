@@ -5,7 +5,7 @@ import { getCollection } from 'astro:content';
 const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
-const posts = (await getCollection('posts')).sort(
+const posts = (await getCollection('posts', ({ data }) => data.category !== 'material-design')).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
 const featuredPost = posts[0];
@@ -30,6 +30,14 @@ const formatDate = (date: Date) => date.toLocaleDateString('zh-Hant', {
       <span>更新節奏</span>
       有新實驗，就寫一篇。
     </p>
+  </section>
+
+  <section class="archive-section" aria-labelledby="material-design-title">
+    <div class="section-heading">
+      <h2 id="material-design-title">教材設計記錄</h2>
+      <a class="read-link" href={`${base}material-design/`}>查看記錄 →</a>
+    </div>
+    <p class="home-intro-copy">由學習目標、題目與互動活動，到試用觀察及修訂，記下每份教材背後的設計思路。</p>
   </section>
 
   {featuredPost && (
