@@ -44,6 +44,8 @@ category: material-design
 ```json
 {
   "id": "s1-term3-p2-q07",
+  "examKey": "s1-term3",
+  "paper": "p2",
   "source_question_id": "2025S1Q07",
   "topic": "指數律",
   "template_text": "化簡 x^{a} · x^{b}",
@@ -107,7 +109,7 @@ Claude 的結果要分成「通過」、「必須修改」和「需要教師決�
 - 先找出最相近的現有題型或變式模板，不要自行發明另一套資料結構；
 - 把初稿拆成兩部分：A. 題目資料／題型 metadata；B. 可重用的變式模板。正式學生練習要將 A 接到 question-bank 的 generator／validator registry；
 - 題目資料最少提供 key、name、category、difficulty、grade、term、topicKey、topicName、type、checkType、params_schema、answers、displayAnswer、steps、pdfText、schemaVersion、part、validator、generator、code 和 source；需要時再加入 defaultParams、options、answerSpec、figure 或 referenceAnswer；
-- 變式模板提供穩定 id、source_question_id、topic、template_text、變數名稱、每個變數的 min/max/step，以及 answer_template；
+- 變式模板提供穩定 id、examKey、paper、source_question_id、topic、template_text、變數名稱、每個變數的 min/max/step，以及 answer_template；選擇題或幾何題按需要加入 options_template 或 figure_svg；
 - 用實際可驗證的整數／分數範圍產生參數，避免答案超出判分器可接受格式；
 - 題目必須保留符合 docs/question-codes.md 的穩定 question code；
 - JSON 內的 LaTeX 按 repo 規則轉義；不要把可執行 JavaScript 放進題目庫；
