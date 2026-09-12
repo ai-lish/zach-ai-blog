@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
+import ViewCount from '../components/ViewCount.astro';
 
 const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
 const records = (await getCollection('posts', ({ data }) => data.category === 'material-design'))
@@ -9,17 +10,27 @@ const records = (await getCollection('posts', ({ data }) => data.category === 'm
 
 <Layout title="教材設計記錄 | Zach's Blog" description="記錄數學教材的學習目標、設計思路、活動安排、試用觀察與修訂。">
   <section class="home-intro" aria-labelledby="records-title">
-    <div>
+    <div class="home-intro-main">
       <p class="eyebrow">教學實踐 · 設計筆記</p>
       <h1 id="records-title">教材設計記錄</h1>
       <p class="home-intro-copy">每份教材都有一個想解決的學習問題。這裏記下設計的起點、活動與題目的取捨，以及試用後值得保留或修改的地方。</p>
+      <div class="hero-actions">
+        <a class="button button-primary" href="#records-list">瀏覽全部記錄 <span aria-hidden="true">↗</span></a>
+        <a class="button button-quiet" href={base}>返回文章</a>
+      </div>
     </div>
-    <p class="home-intro-note"><span>記錄重點</span>目標 → 設計 → 試用 → 修訂</p>
+    <aside class="home-intro-note">
+      <div class="note-heading"><span>記錄重點</span><span class="note-index">02</span></div>
+      <strong>目標 → 設計 → 試用 → 修訂</strong>
+      <p>把每次課堂回饋變成下一版教材的起點。</p>
+      <span class="note-rule" aria-hidden="true"></span>
+      <span class="note-meta">可重用 · 可追蹤</span>
+    </aside>
   </section>
 
-  <section class="archive-section" aria-labelledby="records-list-title">
+  <section id="records-list" class="archive-section" aria-labelledby="records-list-title">
     <div class="section-heading">
-      <h2 id="records-list-title">所有記錄</h2>
+      <div><p class="section-kicker">設計檔案</p><h2 id="records-list-title">所有記錄</h2></div>
       <span class="section-count">{records.length} 篇</span>
     </div>
     <div class="post-list">
@@ -31,7 +42,10 @@ const records = (await getCollection('posts', ({ data }) => data.category === 'm
             <h3>{post.data.title}</h3>
             {post.data.description && <span>{post.data.description}</span>}
           </span>
-          <time datetime={post.data.pubDate.toISOString()}>{post.data.pubDate.toLocaleDateString('zh-Hant', { year: 'numeric', month: 'long', day: 'numeric' })}</time>
+          <span class="post-row-meta">
+            <time datetime={post.data.pubDate.toISOString()}>{post.data.pubDate.toLocaleDateString('zh-Hant', { year: 'numeric', month: 'long', day: 'numeric' })}</time>
+            <ViewCount path={`${base}posts/${post.id}/`} label="瀏覽" />
+          </span>
         </a>
       ))}
     </div>

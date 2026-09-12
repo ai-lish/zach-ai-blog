@@ -1,13 +1,16 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
+import ViewCount from '../components/ViewCount.astro';
 
 const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
-const posts = (await getCollection('posts', ({ data }) => data.category !== 'material-design')).sort(
+const allPosts = await getCollection('posts');
+const posts = allPosts.filter(({ data }) => data.category !== 'material-design').sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
+const materialRecordCount = allPosts.filter(({ data }) => data.category === 'material-design').length;
 const featuredPost = posts[0];
 const otherPosts = posts.slice(1);
 const formatDate = (date: Date) => date.toLocaleDateString('zh-Hant', {
@@ -19,31 +22,44 @@ const formatDate = (date: Date) => date.toLocaleDateString('zh-Hant', {
 
 <Layout title="Zach's Blog - AI 與數學學習" description="Zach 的 AI 與數學學習部落格">
   <section class="home-intro" aria-labelledby="home-title">
-    <div>
+    <div class="home-intro-main">
       <p class="eyebrow">AI 工具 · 數學學習</p>
       <h1 id="home-title">把複雜工具，寫成可重用的做法。</h1>
       <p class="home-intro-copy">
         記錄實際試過的工具、流程與判斷，讓下一次遇到同一個問題時，可以少走一點彎路。
       </p>
+      <div class="hero-actions">
+        <a class="button button-primary" href="#latest">閱讀最新實驗 <span aria-hidden="true">↗</span></a>
+        <a class="button button-quiet" href={`${base}material-design/`}>看教材設計記錄</a>
+      </div>
     </div>
-    <p class="home-intro-note">
-      <span>更新節奏</span>
-      有新實驗，就寫一篇。
-    </p>
+    <aside class="home-intro-note">
+      <div class="note-heading"><span>正在建立</span><span class="note-index">01</span></div>
+      <strong>一個可重用的教學實驗檔案。</strong>
+      <p>從第一個 prompt 到最後一次 review，把決定留下來，讓教材可以繼續進步。</p>
+      <span class="note-rule" aria-hidden="true"></span>
+      <span class="note-meta">香港 · 持續更新</span>
+    </aside>
   </section>
 
-  <section class="archive-section" aria-labelledby="material-design-title">
+  <section class="home-stats" aria-label="網站概覽">
+    <div class="stat-card"><span class="stat-value">{posts.length}</span><span class="stat-label">篇實驗筆記</span></div>
+    <div class="stat-card"><span class="stat-value">{materialRecordCount}</span><span class="stat-label">份教材記錄</span></div>
+    <div class="stat-card"><span class="stat-value">AI × Math</span><span class="stat-label">主要探索方向</span></div>
+  </section>
+
+  <section class="archive-section purpose-section" aria-labelledby="material-design-title">
     <div class="section-heading">
-      <h2 id="material-design-title">教材設計記錄</h2>
-      <a class="read-link" href={`${base}material-design/`}>查看記錄 →</a>
+      <div><p class="section-kicker">專題檔案</p><h2 id="material-design-title">教材設計記錄</h2></div>
+      <a class="read-link" href={`${base}material-design/`}>查看記錄 <span aria-hidden="true">↗</span></a>
     </div>
     <p class="home-intro-copy">由學習目標、題目與互動活動，到試用觀察及修訂，記下每份教材背後的設計思路。</p>
   </section>
 
   {featuredPost && (
-    <section class="featured-section" aria-labelledby="featured-title">
+    <section id="latest" class="featured-section" aria-labelledby="featured-title">
       <div class="section-heading">
-        <p class="section-kicker">最新實驗</p>
+        <div><p class="section-kicker">最新實驗</p><h2>最近一次記錄</h2></div>
         <span class="section-count">{formatDate(featuredPost.data.pubDate)}</span>
       </div>
 
@@ -65,7 +81,10 @@ const formatDate = (date: Date) => date.toLocaleDateString('zh-Hant', {
           {featuredPost.data.description && (
             <p class="feature-description">{featuredPost.data.description}</p>
           )}
-          <span class="read-link">閱讀全文 <span aria-hidden="true">↗</span></span>
+          <div class="feature-meta">
+            <span class="read-link">閱讀全文 <span aria-hidden="true">↗</span></span>
+            <ViewCount path={`${base}posts/${featuredPost.id}/`} label="瀏覽" />
+          </div>
         </div>
       </a>
     </section>
@@ -74,7 +93,7 @@ const formatDate = (date: Date) => date.toLocaleDateString('zh-Hant', {
   {otherPosts.length > 0 && (
     <section class="archive-section" aria-labelledby="archive-title">
       <div class="section-heading">
-        <h2 id="archive-title">其他文章</h2>
+        <div><p class="section-kicker">文章索引</p><h2 id="archive-title">其他文章</h2></div>
         <span class="section-count">{otherPosts.length} 篇</span>
       </div>
 
@@ -87,7 +106,10 @@ const formatDate = (date: Date) => date.toLocaleDateString('zh-Hant', {
               <h3>{post.data.title}</h3>
               {post.data.description && <span>{post.data.description}</span>}
             </span>
-            <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
+            <span class="post-row-meta">
+              <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
+              <ViewCount path={`${base}posts/${post.id}/`} label="瀏覽" />
+            </span>
           </a>
         ))}
       </div>
