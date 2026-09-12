@@ -1,0 +1,27 @@
+---
+interface Props {
+  path?: string;
+  label?: string;
+}
+
+const { path = '', label = '瀏覽次數' } = Astro.props;
+const configuredGoatCounterCode = (import.meta.env.PUBLIC_GOATCOUNTER_CODE ?? '').trim();
+const goatCounterCode = /^[a-z0-9-]+$/i.test(configuredGoatCounterCode) ? configuredGoatCounterCode : '';
+---
+
+<span
+  class="view-count"
+  data-view-count
+  data-view-path={path}
+  data-counter-code={goatCounterCode}
+  data-view-label={label}
+  aria-label={label}
+  title={label}
+>
+  <svg class="view-count-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12s3.5-6 9.75-6 9.75 6 9.75 6-3.5 6-9.75 6-9.75-6-9.75-6Z" />
+    <circle cx="12" cy="12" r="2.5" />
+  </svg>
+  <span class="view-count-value" aria-live="polite">—</span>
+  <span class="view-count-label">{label}</span>
+</span>

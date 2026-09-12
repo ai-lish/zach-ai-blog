@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import ViewCount from '../components/ViewCount.astro';
 
 interface Props {
   title: string;
@@ -10,6 +11,10 @@ const { title, description = 'Zach 的 AI 與數學學習部落格' } = Astro.pr
 const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
+const configuredGoatCounterCode = (import.meta.env.PUBLIC_GOATCOUNTER_CODE ?? '').trim();
+const goatCounterCode = /^[a-z0-9-]+$/i.test(configuredGoatCounterCode) ? configuredGoatCounterCode : '';
+const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
+const basePath = base.replace(/\/+$/, '') || '/';
 ---
 
 <!doctype html>
@@ -20,6 +25,7 @@ const base = import.meta.env.BASE_URL.endsWith('/')
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
     <title>{title}</title>
+    {goatCounterCode && <script data-goatcounter={`https://${goatCounterCode}.goatcounter.com/count`} async src="https://gc.zgo.at/count.js"></script>}
   </head>
   <body>
     <div id="reading-progress" style="width: 0%"></div>
@@ -27,14 +33,15 @@ const base = import.meta.env.BASE_URL.endsWith('/')
     <header class="site-header">
       <div class="site-header-inner">
         <a href={base} class="brand" aria-label="返回首頁">
-          <span class="brand-rule" aria-hidden="true"></span>
-          <span>Zach's Blog</span>
+          <span class="brand-mark" aria-hidden="true">Z</span>
+          <span class="brand-copy"><span>Zach's Blog</span><small>AI × 教學 × 實驗</small></span>
         </a>
 
         <nav class="site-nav" aria-label="主要導覽">
-          <a href={base}>首頁</a>
-          <a href={`${base}about/`}>關於</a>
-          <a href={`${base}newsletter/`}>訂閱</a>
+          <a class:list={{ 'is-active': currentPath === basePath }} href={base}>首頁</a>
+          <a class:list={{ 'is-active': currentPath === `${basePath}/material-design` }} href={`${base}material-design/`}>教材設計記錄</a>
+          <a class:list={{ 'is-active': currentPath === `${basePath}/about` }} href={`${base}about/`}>關於</a>
+          <a class:list={{ 'is-active': currentPath === `${basePath}/newsletter` }} href={`${base}newsletter/`}>訂閱</a>
           <button id="dark-toggle" type="button" aria-label="切換深色模式" title="切換深色模式">
             <svg id="sun-icon" class="theme-icon hidden dark:block" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364-.707-.707M6.343 6.343l-.707-.707m12.728 0-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z" />
@@ -53,8 +60,12 @@ const base = import.meta.env.BASE_URL.endsWith('/')
 
     <footer class="site-footer">
       <div class="site-footer-inner">
-        <p>AI 工具、數學與本地實驗。</p>
+        <div class="footer-signature">
+          <span class="footer-mark" aria-hidden="true">Z</span>
+          <p>AI 工具、數學與本地實驗。</p>
+        </div>
         <div class="footer-links">
+          <ViewCount path="" label="瀏覽次數" />
           <a href="https://github.com/ai-lish/zach-ai-blog" target="_blank" rel="noopener">GitHub</a>
           <a href="mailto:zach@example.com">Email</a>
         </div>
@@ -74,6 +85,60 @@ const base = import.meta.env.BASE_URL.endsWith('/')
         const isDark = document.documentElement.classList.toggle('dark');
         localStorage.setItem('theme', isDark ? 'dark' : 'light');
       });
+
+      (function() {
+        const counters = document.querySelectorAll('[data-view-count]');
+        if (!counters.length) return;
+
+        const format = (value) => new Intl.NumberFormat('zh-Hant').format(value);
+        const localKey = (path) => `zach-ai-blog:views:${path}`;
+
+        function localCount(path) {
+          const key = localKey(path);
+          const seenKey = `${key}:session`;
+          let value = Number.parseInt(localStorage.getItem(key) || '0', 10);
+          if (!sessionStorage.getItem(seenKey)) {
+            value += 1;
+            localStorage.setItem(key, String(value));
+            sessionStorage.setItem(seenKey, '1');
+          }
+          return Number.isFinite(value) ? value : 0;
+        }
+
+        function renderLocal(counter, path) {
+          const value = localCount(path);
+          const label = counter.dataset.viewLabel || '瀏覽次數';
+          counter.querySelector('.view-count-value').textContent = format(value);
+          counter.querySelector('.view-count-label').textContent = `本機${label}`;
+          counter.dataset.viewMode = 'local';
+          counter.title = `本機${label}`;
+        }
+
+        counters.forEach((counter) => {
+          const path = counter.dataset.viewPath || window.location.pathname;
+          const code = counter.dataset.counterCode;
+          if (!code) {
+            renderLocal(counter, path);
+            return;
+          }
+
+          const endpoint = `https://${code}.goatcounter.com/counter/${encodeURIComponent(path)}.json`;
+          fetch(endpoint, { headers: { Accept: 'application/json' } })
+            .then((response) => {
+              if (!response.ok) throw new Error(`counter request failed: ${response.status}`);
+              return response.json();
+            })
+            .then((data) => {
+              const raw = data?.count ?? data?.count_unique;
+              const value = Number.parseInt(String(raw).replace(/[^0-9]/g, ''), 10);
+              if (!Number.isFinite(value)) throw new Error('counter response missing count');
+              counter.querySelector('.view-count-value').textContent = format(value);
+              counter.querySelector('.view-count-label').textContent = counter.dataset.viewLabel || '瀏覽次數';
+              counter.dataset.viewMode = 'goatcounter';
+            })
+            .catch(() => renderLocal(counter, path));
+        });
+      })();
     </script>
   </body>
 </html>

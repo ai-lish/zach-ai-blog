@@ -53,7 +53,7 @@ Redesign of zach-ai-blog with minimalist, warm, friendly aesthetic. Emphasis on 
 - Sticky top, white/surface background, subtle bottom border
 - Logo text: "Zach's Blog" in Playfair Display
 - Dark mode toggle button (sun/moon icon)
-- Links: Home, About, Newsletter
+- Links: Home, Material Design Records, About, Newsletter
 
 **Hero section** (homepage only, in `index.astro`):
 - Illustrated cartoon banner (inline SVG)
@@ -103,6 +103,13 @@ Redesign of zach-ai-blog with minimalist, warm, friendly aesthetic. Emphasis on 
 ### 5. Newsletter Page (`newsletter.astro`)
 - Centered, max-width card
 - Clean form styling with focus states
+
+### 6. Editorial refresh and view counts
+- Homepage uses an editorial hero panel, small overview cards, a purpose callout, and distinct featured/archive sections.
+- About page explains the repository purpose and separates the blog archive from the executable Assessment repository.
+- Newsletter page uses the same card, button, and accent panel system as the rest of the site.
+- Article headers, archive rows, and the footer expose a small `ViewCount` component. When `PUBLIC_GOATCOUNTER_CODE` is available at build time, it reads the per-path count from GoatCounter; otherwise it shows a clearly labeled per-browser fallback stored in `localStorage`.
+- GitHub Pages builds receive `PUBLIC_GOATCOUNTER_CODE` from the repository Actions variable of the same name, so the site never needs an API token in client code.
 
 ---
 

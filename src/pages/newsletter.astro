@@ -2,48 +2,34 @@
 import Layout from '../layouts/Layout.astro';
 ---
 
-<Layout title="Newsletter - Zach's Blog" description="訂閱 Zach's Blog，收到新文章通知">
-  <article class="bg-white rounded-lg border border-stone-200 p-8 max-w-xl mx-auto dark:bg-[#242424] dark:border-[#333333]">
-    <h1 class="text-3xl font-bold text-stone-900 mb-4 dark:text-[#F5F0EB]" style="font-family: 'Playfair Display', Georgia, serif;">
-      Newsletter
-    </h1>
-    <p class="text-stone-600 mb-6 leading-relaxed dark:text-[#A8A29E]">
-      訂閱我的 Newsletter，當有新文章時我會通知你。不會 spam，只係有新野先寫比你。
-    </p>
+<Layout title="訂閱 | Zach's Blog" description="訂閱 Zach's Blog，收到新的 AI、數學與教材設計記錄。">
+  <section class="newsletter-shell" aria-labelledby="newsletter-title">
+    <div class="newsletter-card">
+      <p class="eyebrow">保持聯絡</p>
+      <h1 id="newsletter-title">有新實驗，通知你。</h1>
+      <p class="newsletter-lead">訂閱後，我會在有新文章或教材設計記錄時寄一封短訊息。不定期、不灌水，內容會保留實際做過的步驟和結果。</p>
 
-    <form class="space-y-4" onsubmit="handleSubscribe(event)">
-      <div>
-        <label for="email" class="block text-sm font-medium text-stone-700 mb-1 dark:text-[#A8A29E]">
-          電郵地址
-        </label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          required
-          placeholder="your@email.com"
-          class="w-full px-4 py-2.5 border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#5B8A8A] focus:border-[#5B8A8A] outline-none transition-shadow dark:bg-[#1A1A1A] dark:border-[#333333] dark:text-[#F5F0EB] dark:placeholder-[#78716C]"
-        />
-      </div>
-      <button
-        type="submit"
-        class="w-full bg-[#5B8A8A] text-white py-2.5 px-4 rounded-lg font-medium hover:bg-[#4A7575] active:bg-[#3D6464] transition-colors"
-      >
-        訂閱
-      </button>
-    </form>
-
-    <p class="text-stone-400 text-xs mt-4 dark:text-[#78716C]">
-      暫時用 mailto form，你可以留任何 email，我会手动处理。
-    </p>
-  </article>
+      <form class="newsletter-form" onsubmit="handleSubscribe(event)">
+        <label for="email">電郵地址</label>
+        <div class="newsletter-input-row">
+          <input type="email" id="email" name="email" required placeholder="your@email.com" autocomplete="email" />
+          <button class="button button-primary" type="submit">訂閱 <span aria-hidden="true">↗</span></button>
+        </div>
+      </form>
+      <p class="newsletter-note">目前會開啟郵件程式完成訂閱，之後由我手動處理。</p>
+    </div>
+    <div class="newsletter-side" aria-hidden="true">
+      <span class="side-number">03</span>
+      <span class="side-line"></span>
+      <strong>AI<br />×<br />教學</strong>
+    </div>
+  </section>
 
   <script is:inline>
     function handleSubscribe(event) {
       event.preventDefault();
       const email = document.getElementById('email').value;
-      window.location.href = `mailto:zach@example.com?subject=Newsletter Subscribe&body=Hi, I'd like to subscribe with: ${email}`;
-      alert('已開啟郵件程式，請發送以完成訂閱！');
+      window.location.href = `mailto:zach@example.com?subject=Newsletter Subscribe&body=Hi, I'd like to subscribe with: ${encodeURIComponent(email)}`;
     }
   </script>
 </Layout>
