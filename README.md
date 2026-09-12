@@ -60,6 +60,10 @@ category: material-design
 
 內文可參考 `src/content/posts/material-design-record-guide.md` 的大綱，依序記下背景、目標、設計取捨、資源連結、試用觀察與修訂。
 
+教材製作採用「Gemini 初稿 → Claude 逐題審閱 → Codex 整理／發佈」的交接流程。多個回合後若上下文或檔案變得過於複雜，保留題目清單、review 意見、版本和 Assessment 發佈包，再交給 Codex；PR 建立後改由 Claude 線上檢視 GitHub diff，Codex 按 review 修改。最終成果分拆為 `question-bank.json` 的題目資料、`templates/student.html` 的共用學生模板，以及 `exercises/` 下的正式練習。
+
+流程使用的 Assessment 參考檔案：[`templates/student.html`](https://github.com/ai-lish/Assessments/blob/main/templates/student.html)、[`question-bank.json`](https://github.com/ai-lish/Assessments/blob/main/question-bank.json)、[`exercises/README.md`](https://github.com/ai-lish/Assessments/blob/main/exercises/README.md)、[`scripts/publish_exercise.cjs`](https://github.com/ai-lish/Assessments/blob/main/scripts/publish_exercise.cjs)。記錄頁內附有可交給任一 agent 的完整提示語。
+
 ---
 
 Built with ❤️ by Zach Li
