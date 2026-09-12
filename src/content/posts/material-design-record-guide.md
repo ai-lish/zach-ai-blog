@@ -37,6 +37,24 @@ category: material-design
 
 先閱讀 [Assessment 的學生版模板](https://github.com/ai-lish/Assessments/blob/main/templates/student.html)，確認學生頁面的佈局、輸入方式、MathJax、回饋和 PDF 行為；再對照 [題目庫規格](https://github.com/ai-lish/Assessments/blob/main/question-bank.json)，把每一課的練習拆成可驗證的題型資料。正式匯出的位置和命名方式以 [exercises/README.md](https://github.com/ai-lish/Assessments/blob/main/exercises/README.md) 為準。
 
+題目模板可分兩層使用。若要先建立考試題目的變式，參考 [auto_templates_exam.json](https://github.com/ai-lish/Assessments/blob/main/exam/mimic/auto_templates_exam.json) 的 `id`、`source_question_id`、`topic`、`template_text`、`var_specs` 和 `answer_template`；[generate.js](https://github.com/ai-lish/Assessments/blob/main/exam/mimic/generate.js) 會按變數範圍替換題目文字。要成為正式初中練習，則要再轉成 `question-bank.json` 的 canonical 題型，接上 `tool/generators.js` 和 `tool/validators.js`，最後由 `templates/student.html` 產生學生頁面。
+
+例如，變式模板可以先用以下結構表達「指數律」題目：
+
+```json
+{
+  "id": "s1-term3-p2-q07",
+  "source_question_id": "2025S1Q07",
+  "topic": "指數律",
+  "template_text": "化簡 x^{a} · x^{b}",
+  "var_specs": {
+    "a": { "min": 2, "max": 12, "step": 1 },
+    "b": { "min": 2, "max": 8, "step": 1 }
+  },
+  "answer_template": "x^({a}+{b})"
+}
+```
+
 模板不是用來直接改成一份新練習的成品。題目內容應放進題目庫所需的資料欄位，學生版外殼則由 Assessment 的產生工具處理；這樣題目、判分器和學生頁面的責任可以分開審核。
 
 ### 2. Gemini 先做每課初稿，Claude 逐題審閱
@@ -73,32 +91,42 @@ Claude 的結果要分成「通過」、「必須修改」和「需要教師決�
 以下提示語以 Assessment repo 的實際模板和欄位為準；可把 `[方括號]` 內容替換後交給 Gemini、Claude 或 Codex。每次交接都附上檔案路徑和版本日期，不要只貼截圖或一段孤立題目。
 
 ```text
-你正在協助 ai-lish/Assessments 製作「[年級] [學期] [課題]」練習。
+你是 ai-lish/Assessments 的教材及題型維護 agent，正在製作「[年級] [學期] [課題]」練習。
 
 先閱讀並遵守：
-1. templates/student.html：學生版外殼、輸入類型、MathJax、回饋和 PDF 行為；
-2. question-bank.json：題型資料欄位、generator/validator contract、年級／學期／課題分類；
-3. exercises/README.md：正式輸出路徑、命名和隨機題目規則；
-4. docs/question-codes.md：題目編碼格式。
+1. question-bank.json 的 _schema_guide：正式題型資料欄位和 generator/validator contract；
+2. templates/student.html：學生版外殼、輸入類型、MathJax、回饋和 PDF 行為；
+3. tool/generators.js、tool/validators.js：可重用的產生和判分 registry；
+4. 相關 preset：題型和題數的正式組合；
+5. exam/mimic/auto_templates_exam.json、exam/mimic/generate.js：變式模板的欄位及變數替換方式；
+6. scripts/gen_exercise_html.cjs、scripts/publish_exercise.cjs：生成學生版和建立發佈包的規則；
+7. exercises/README.md、docs/question-codes.md：正式輸出路徑、命名、隨機題目規則和題目編碼格式。
 
 工作要求：
 - 只處理本回合指定的課題和檔案，不覆蓋其他題型；
-- 每題提供 key、name、grade、term、topicKey、difficulty、type、checkType、params_schema、generator、validator、題目文字、答案、解題步驟和 pdfText；
+- 先找出最相近的現有題型或變式模板，不要自行發明另一套資料結構；
+- 把初稿拆成兩部分：A. 題目資料／題型 metadata；B. 可重用的變式模板。正式學生練習要將 A 接到 question-bank 的 generator／validator registry；
+- 題目資料最少提供 key、name、category、difficulty、grade、term、topicKey、topicName、type、checkType、params_schema、answers、displayAnswer、steps、pdfText、schemaVersion、part、validator、generator、code 和 source；需要時再加入 defaultParams、options、answerSpec、figure 或 referenceAnswer；
+- 變式模板提供穩定 id、source_question_id、topic、template_text、變數名稱、每個變數的 min/max/step，以及 answer_template；
 - 用實際可驗證的整數／分數範圍產生參數，避免答案超出判分器可接受格式；
+- 題目必須保留符合 docs/question-codes.md 的穩定 question code；
 - JSON 內的 LaTeX 按 repo 規則轉義；不要把可執行 JavaScript 放進題目庫；
-- 標示仍需教師決定的內容，不要自行補造來源或課堂成效。
+- 標示仍需教師決定的內容，不要自行補造來源、答案或課堂成效。
 
 本次角色是：[Gemini 初稿／Claude 審閱／Codex 發佈]。
-- Gemini：先產生題目規格和初稿，列出每題的答案推導及可能風險。
-- Claude：逐題核對計算、答案、難度、語文、LaTeX、generator/validator 相容性，輸出「通過／必須修改／需要教師決定」清單。
-- Codex：根據已通過清單修改檔案，執行 repo 指定測試；若要發佈，使用 scripts/publish_exercise.cjs 的發佈包欄位，建立可審核的分支和 PR。
+- Gemini：先產生變式模板和題目規格，列出每題的答案推導、參數邊界及可能風險。
+- Claude：逐題核對題目與答案、隨機參數、解題步驟、難度、語文、LaTeX、圖形及 generator/validator 相容性，輸出「通過／必須修改／需要教師決定」清單。
+- Codex：根據已通過清單修改正式檔案，執行 repo 指定測試；若要發佈，使用 scripts/publish_exercise.cjs 要求的 targetPath、fileName、sourcePreset、mode、questionCodes、generatedAt 和 bankHash，建立可審核的分支和 PR。
+
+交接規則：多輪修改後若 Gemini 無法完整掌握檔案，交給 Codex 的內容必須包括目前工作樹或 PR、最後通過清單、review comments、未解決問題和版本資訊。PR 建立後，Claude 直接在線上 GitHub review，Codex 按 comment 修改並重新測試。
 
 回覆格式：
 1. 修改或新增的檔案；
-2. 題目 key／question code 對照表；
-3. 未解決問題和需要教師決定的項目；
-4. 執行過的檢查及結果；
-5. 下一位 agent 可以直接接手的指示。
+2. 題目 key／question code／變式模板 id 對照表；
+3. 題目層、模板層和練習層的資料流；
+4. 未解決問題和需要教師決定的項目；
+5. 執行過的檢查及結果；
+6. 下一位 agent 可以直接接手的指示。
 ```
 
 每次回合都將提示語版本、模型、日期和 review 結果寫回本記錄，並在正式更新 Assessment repo 前確認題目層、模板層和練習層沒有混在同一個檔案內。
