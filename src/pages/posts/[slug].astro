@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
+import SeriesTimeline from '../../components/SeriesTimeline.astro';
 import ViewCount from '../../components/ViewCount.astro';
 
 export async function getStaticPaths() {
@@ -14,6 +15,7 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content } = await render(post);
 const isMaterialDesign = post.data.category === 'material-design';
+const isAiWorkflow = post.data.series === 'ai-workflow';
 const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
@@ -23,8 +25,13 @@ const postTitle = post.data.title;
 const coverUrl = post.data.cover ? `${base}${post.data.cover}` : undefined;
 ---
 
-<Layout title={post.data.title} description={post.data.description}>
-  <article class="article-shell">
+<Layout
+  title={post.data.title}
+  description={post.data.description}
+  mainClass={isAiWorkflow ? 'series-main' : undefined}
+>
+  <article class:list={{ 'article-shell': true, 'series-article-shell': isAiWorkflow }}>
+    {isAiWorkflow && <SeriesTimeline seriesPart={post.data.seriesPart} />}
     <header class="article-header">
       <a href={isMaterialDesign ? `${base}material-design/` : base} class="back-link">{isMaterialDesign ? "← 教材設計記錄" : "← 所有文章"}</a>
       <p class="eyebrow">{isMaterialDesign ? '教材設計記錄' : post.data.cover ? '本地 AI 實戰' : '部落格筆記'}</p>

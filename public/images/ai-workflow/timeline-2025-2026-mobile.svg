@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 1490" role="img" aria-labelledby="title desc">
+  <title id="title">一個數學老師的 AI 協作流程：2025 至 2026 年縱向時間線</title>
+  <desc id="desc">六個時段由課堂小遊戲開始，逐步發展到 Codex、Claude Code 和教學工具協作。</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .axis { stroke: #52736f; stroke-width: 5; }
+    .connector { stroke: #91aaa5; stroke-width: 3; }
+    .node { fill: #087f73; stroke: #fbfaf7; stroke-width: 6; }
+    .card { fill: #f4f7f5; stroke: #cbd8d4; stroke-width: 2; }
+    .date { fill: #087f73; font-size: 29px; font-weight: 700; }
+    .heading { fill: #20282b; font-size: 30px; font-weight: 700; }
+    .copy { fill: #425154; font-size: 25px; }
+  </style>
+  <line class="axis" x1="43" y1="70" x2="43" y2="1420" />
+
+  <g>
+    <circle class="node" cx="43" cy="145" r="14" />
+    <line class="connector" x1="57" y1="145" x2="89" y2="145" />
+    <rect class="card" x="89" y="55" width="640" height="180" rx="18" />
+    <text class="date" x="117" y="98">2025 年 11 月</text>
+    <text class="heading" x="117" y="139">課堂小遊戲起步</text>
+    <text class="copy" x="117" y="182">M2 Mac mini 上用 Gemini 製作，放上 Google Sites</text>
+  </g>
+  <g>
+    <circle class="node" cx="43" cy="385" r="14" />
+    <line class="connector" x1="57" y1="385" x2="89" y2="385" />
+    <rect class="card" x="89" y="295" width="640" height="180" rx="18" />
+    <text class="date" x="117" y="338">2026 年 3 月</text>
+    <text class="heading" x="117" y="379">開始派發工作</text>
+    <text class="copy" x="117" y="422">MiniMax 驅動 OpenClaw，建立 GitHub repo</text>
+  </g>
+  <g>
+    <circle class="node" cx="43" cy="625" r="14" />
+    <line class="connector" x1="57" y1="625" x2="89" y2="625" />
+    <rect class="card" x="89" y="535" width="640" height="180" rx="18" />
+    <text class="date" x="117" y="578">2026 年 5–6 月</text>
+    <text class="heading" x="117" y="619">提示語交接</text>
+    <text class="copy" x="117" y="662">Claude Chat 寫提示語，再交 Gemini 更新</text>
+  </g>
+  <g>
+    <circle class="node" cx="43" cy="865" r="14" />
+    <line class="connector" x1="57" y1="865" x2="89" y2="865" />
+    <rect class="card" x="89" y="775" width="640" height="180" rx="18" />
+    <text class="date" x="117" y="818">2026 年 6–7 月</text>
+    <text class="heading" x="117" y="859">改用訂閱版 Codex</text>
+    <text class="copy" x="117" y="902">Claude Chat 提供建議，Codex 接手工作</text>
+  </g>
+  <g>
+    <circle class="node" cx="43" cy="1105" r="14" />
+    <line class="connector" x1="57" y1="1105" x2="89" y2="1105" />
+    <rect class="card" x="89" y="1015" width="640" height="180" rx="18" />
+    <text class="date" x="117" y="1058">2026 年 9 月下旬</text>
+    <text class="heading" x="117" y="1099">Claude Code 加入</text>
+    <text class="copy" x="117" y="1142">一個 Claude 指揮多條 Codex thread</text>
+  </g>
+  <g>
+    <circle class="node" cx="43" cy="1345" r="14" />
+    <line class="connector" x1="57" y1="1345" x2="89" y2="1345" />
+    <rect class="card" x="89" y="1255" width="640" height="180" rx="18" />
+    <text class="date" x="117" y="1298">2026 年 10 月</text>
+    <text class="heading" x="117" y="1339">工具和分工擴展</text>
+    <text class="copy" x="117" y="1382">Gemini、Manim、語音和獨立審閱</text>
+  </g>
+</svg>

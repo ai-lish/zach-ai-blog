@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 500" role="img" aria-labelledby="title desc">
+  <title id="title">一個數學老師的 AI 協作流程：2025 至 2026 年時間線</title>
+  <desc id="desc">六個時段由課堂小遊戲開始，逐步發展到 Codex、Claude Code 和教學工具協作。</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .axis { stroke: #52736f; stroke-width: 3; }
+    .connector { stroke: #91aaa5; stroke-width: 2; }
+    .node { fill: #087f73; stroke: #fbfaf7; stroke-width: 4; }
+    .card { fill: #f4f7f5; stroke: #cbd8d4; stroke-width: 2; }
+    .date { fill: #087f73; font-size: 11px; font-weight: 700; }
+    .heading { fill: #20282b; font-size: 12px; font-weight: 700; }
+    .copy { fill: #425154; font-size: 10px; }
+  </style>
+  <line class="axis" x1="70" y1="250" x2="690" y2="250" />
+
+  <g>
+    <line class="connector" x1="70" y1="218" x2="70" y2="205" />
+    <circle class="node" cx="70" cy="250" r="8" />
+    <rect class="card" x="8" y="15" width="124" height="190" rx="12" />
+    <text class="date" x="16" y="40">2025 年 11 月</text>
+    <text class="heading" x="16" y="74">課堂小遊戲起步</text>
+    <text class="copy" x="16" y="103"><tspan x="16">Gemini 製作</tspan><tspan x="16" dy="17">小遊戲，再放上</tspan><tspan x="16" dy="17">Google Sites</tspan></text>
+  </g>
+  <g>
+    <line class="connector" x1="194" y1="282" x2="194" y2="295" />
+    <circle class="node" cx="194" cy="250" r="8" />
+    <rect class="card" x="132" y="295" width="124" height="190" rx="12" />
+    <text class="date" x="140" y="320">2026 年 3 月</text>
+    <text class="heading" x="140" y="354">開始派發工作</text>
+    <text class="copy" x="140" y="383"><tspan x="140">MiniMax 驅動</tspan><tspan x="140" dy="17">OpenClaw；建立</tspan><tspan x="140" dy="17">GitHub repo</tspan></text>
+  </g>
+  <g>
+    <line class="connector" x1="318" y1="218" x2="318" y2="205" />
+    <circle class="node" cx="318" cy="250" r="8" />
+    <rect class="card" x="256" y="15" width="124" height="190" rx="12" />
+    <text class="date" x="264" y="40">2026 年 5–6 月</text>
+    <text class="heading" x="264" y="74">提示語交接</text>
+    <text class="copy" x="264" y="103"><tspan x="264">Claude Chat</tspan><tspan x="264" dy="17">寫提示語，再交</tspan><tspan x="264" dy="17">Gemini 更新遊戲</tspan></text>
+  </g>
+  <g>
+    <line class="connector" x1="442" y1="282" x2="442" y2="295" />
+    <circle class="node" cx="442" cy="250" r="8" />
+    <rect class="card" x="380" y="295" width="124" height="190" rx="12" />
+    <text class="date" x="388" y="320">2026 年 6–7 月</text>
+    <text class="heading" x="388" y="354">改用訂閱版 Codex</text>
+    <text class="copy" x="388" y="383"><tspan x="388">Claude Chat 作</tspan><tspan x="388" dy="17">建議；Codex 接手</tspan><tspan x="388" dy="17">Discord 工作</tspan></text>
+  </g>
+  <g>
+    <line class="connector" x1="566" y1="218" x2="566" y2="205" />
+    <circle class="node" cx="566" cy="250" r="8" />
+    <rect class="card" x="504" y="15" width="124" height="190" rx="12" />
+    <text class="date" x="512" y="40">2026 年 9 月</text>
+    <text class="date" x="512" y="54">下旬</text>
+    <text class="heading" x="512" y="79">Claude Code 加入</text>
+    <text class="copy" x="512" y="108"><tspan x="512">一個 Claude 指揮</tspan><tspan x="512" dy="17">多條 Codex</tspan><tspan x="512" dy="17">thread</tspan></text>
+  </g>
+  <g>
+    <line class="connector" x1="690" y1="282" x2="690" y2="295" />
+    <circle class="node" cx="690" cy="250" r="8" />
+    <rect class="card" x="628" y="295" width="124" height="190" rx="12" />
+    <text class="date" x="636" y="320">2026 年 10 月</text>
+    <text class="heading" x="636" y="354">工具和分工擴展</text>
+    <text class="copy" x="636" y="383"><tspan x="636">Gemini、Manim、</tspan><tspan x="636" dy="17">語音以及獨立</tspan><tspan x="636" dy="17">審閱</tspan></text>
+  </g>
+</svg>

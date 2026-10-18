@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 1100" role="img" aria-labelledby="title desc">
+  <title id="title">AI 協作分工與 Claude 用量不足時的後備路線</title>
+  <desc id="desc">主流程由 Gemini 起初稿、Codex 實作、Claude 審閱，合併與部署前由本人批准。Claude 用量不足時，Codex thread 讀取 Claude 記錄並接手協調多條 Codex thread。</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .card { fill: #f4f7f5; stroke: #cbd8d4; stroke-width: 2; }
+    .backup { fill: #fff8e9; stroke: #c9a65b; stroke-width: 2; }
+    .label { fill: #20282b; font-size: 30px; font-weight: 700; }
+    .small { fill: #425154; font-size: 25px; }
+    .arrow { fill: none; stroke: #087f73; stroke-width: 4; }
+    .branch { fill: none; stroke: #a77a24; stroke-width: 4; stroke-dasharray: 10 9; }
+  </style>
+  <defs>
+    <marker id="arrow-head" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0L10 5L0 10Z" fill="#087f73" />
+    </marker>
+    <marker id="branch-head" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0L10 5L0 10Z" fill="#a77a24" />
+    </marker>
+  </defs>
+
+  <rect class="card" x="110" y="24" width="600" height="120" rx="20" />
+  <text class="label" x="410" y="76" text-anchor="middle">Gemini</text>
+  <text class="small" x="410" y="116" text-anchor="middle">起初稿</text>
+
+  <path class="arrow" d="M410 145V188" marker-end="url(#arrow-head)" />
+  <rect class="card" x="110" y="198" width="600" height="130" rx="20" />
+  <text class="label" x="410" y="254" text-anchor="middle">Codex</text>
+  <text class="small" x="410" y="300" text-anchor="middle">實作及唯一部署者</text>
+
+  <path class="arrow" d="M410 329V372" marker-end="url(#arrow-head)" />
+  <rect class="card" x="110" y="382" width="600" height="130" rx="20" />
+  <text class="label" x="410" y="438" text-anchor="middle">Claude</text>
+  <text class="small" x="410" y="484" text-anchor="middle">審閱及撰寫提示語</text>
+
+  <path class="arrow" d="M410 513V556" marker-end="url(#arrow-head)" />
+  <rect class="card" x="110" y="566" width="600" height="130" rx="20" />
+  <text class="label" x="410" y="622" text-anchor="middle">本人批准</text>
+  <text class="small" x="410" y="668" text-anchor="middle">合併及部署之前</text>
+
+  <path class="branch" d="M710 446H770V790H710" marker-end="url(#branch-head)" />
+  <rect class="backup" x="70" y="760" width="680" height="290" rx="20" />
+  <text class="label" x="410" y="814" text-anchor="middle">Claude 用量不足時</text>
+  <text class="small" x="410" y="866" text-anchor="middle">由 Codex 專門 thread</text>
+  <text class="small" x="410" y="906" text-anchor="middle">讀取 Claude 記錄並接手</text>
+  <text class="small" x="410" y="934" text-anchor="middle">協調多條 Codex thread</text>
+  <path class="arrow" d="M410 952V984" marker-end="url(#arrow-head)" />
+  <text class="small" x="410" y="1028" text-anchor="middle">再交回合併／部署前批准</text>
+</svg>
