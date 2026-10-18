@@ -9,6 +9,8 @@ const posts = defineCollection({
     description: z.string().optional(),
     category: z.enum(['notes', 'material-design']).default('notes'),
     cover: z.string().optional(),
+    series: z.string().optional(),
+    seriesPart: z.number().int().positive().optional(),
   }),
 });
 

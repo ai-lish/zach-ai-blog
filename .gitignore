@@ -16,6 +16,12 @@ pnpm-debug.log*
 # environment variables
 .env
 .env.production
+.env.*
+!.env.example
+
+# local credentials and student private data
+**/secrets/
+**/student-data/
 
 # macOS-specific files
 .DS_Store

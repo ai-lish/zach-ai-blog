@@ -1,0 +1,68 @@
+---
+import SeriesTimelineContent from './SeriesTimelineContent.astro';
+
+interface Props {
+  seriesPart?: number;
+}
+
+const { seriesPart } = Astro.props;
+---
+
+<aside class="series-sidebar" aria-label="系列導覽">
+  <SeriesTimelineContent seriesPart={seriesPart} idPrefix="desktop" />
+</aside>
+
+<details class="series-mobile">
+  <summary>一個數學老師的 AI 協作流程｜系列時間軸</summary>
+  <SeriesTimelineContent seriesPart={seriesPart} idPrefix="mobile" />
+</details>
+
+<script is:inline>
+  document.querySelectorAll('[data-series-timeline]').forEach((root) => {
+    const periodEntries = Array.from(root.querySelectorAll('[data-period-entry]'));
+
+    periodEntries.forEach((entry) => {
+      const toggle = entry.querySelector('[data-period-toggle]');
+      const panel = entry.querySelector('[data-period-panel]');
+      if (!toggle || !panel) return;
+
+      toggle.setAttribute('aria-expanded', 'false');
+      panel.hidden = true;
+      toggle.addEventListener('click', () => {
+        const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+        toggle.setAttribute('aria-expanded', String(!isExpanded));
+        panel.hidden = isExpanded;
+      });
+    });
+
+    root.querySelectorAll('.timeline-tabs').forEach((tabGroup) => {
+      const tabs = Array.from(tabGroup.querySelectorAll('[data-timeline-tab]'));
+      if (!tabs.length) return;
+
+      const activateTab = (activeIndex, moveFocus) => {
+        tabs.forEach((tab, index) => {
+          const isActive = index === activeIndex;
+          tab.setAttribute('aria-selected', String(isActive));
+          tab.tabIndex = isActive ? 0 : -1;
+          const panel = document.getElementById(tab.getAttribute('aria-controls'));
+          if (panel) panel.hidden = !isActive;
+        });
+        if (moveFocus) tabs[activeIndex].focus();
+      };
+
+      tabs.forEach((tab, index) => {
+        tab.addEventListener('click', () => activateTab(index, false));
+        tab.addEventListener('keydown', (event) => {
+          if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
+          event.preventDefault();
+          const direction = event.key === 'ArrowRight' ? 1 : -1;
+          const nextIndex = (index + direction + tabs.length) % tabs.length;
+          activateTab(nextIndex, true);
+        });
+      });
+
+      const initiallySelected = Math.max(0, tabs.findIndex((tab) => tab.getAttribute('aria-selected') === 'true'));
+      activateTab(initiallySelected, false);
+    });
+  });
+</script>

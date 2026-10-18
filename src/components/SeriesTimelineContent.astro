@@ -1,0 +1,116 @@
+---
+import { getCollection } from 'astro:content';
+import { AI_WORKFLOW_SERIES, AI_WORKFLOW_TIMELINE } from '../data/ai-workflow-timeline';
+
+interface Props {
+  seriesPart?: number;
+  idPrefix: string;
+}
+
+const { seriesPart, idPrefix } = Astro.props;
+const posts = await getCollection('posts');
+const publishedPosts = posts.filter(
+  (post) => post.data.series === AI_WORKFLOW_SERIES.id && typeof post.data.seriesPart === 'number',
+);
+const publishedByPart = new Map(publishedPosts.map((post) => [post.data.seriesPart!, post] as const));
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+---
+
+<div class="series-timeline-content" data-series-timeline>
+  <header class="series-sidebar-heading">
+    <p class="series-kicker">文章系列</p>
+    <h2>{AI_WORKFLOW_SERIES.title}</h2>
+  </header>
+
+  <nav class="series-episode-nav" aria-label="系列各講">
+    <ol>
+      {AI_WORKFLOW_SERIES.episodes.map((episode) => {
+        const publishedPost = publishedByPart.get(episode.part);
+        const isCurrent = episode.part === seriesPart;
+        return (
+          <li class:list={{ 'episode-current': isCurrent }}>
+            {publishedPost ? (
+              <a href={`${base}posts/${publishedPost.id}/`} aria-current={isCurrent ? 'page' : undefined}>
+                <span class="episode-number">第 {episode.part} 講</span>
+                <span class="episode-title">{episode.title}</span>
+              </a>
+            ) : (
+              <span class="episode-upcoming">
+                <span class="episode-number">第 {episode.part} 講</span>
+                <span class="episode-title">{episode.title}</span>
+              </span>
+            )}
+            {isCurrent && <span class="episode-current-label">目前這講</span>}
+          </li>
+        );
+      })}
+    </ol>
+  </nav>
+
+  <section class="series-timeline" aria-label="系列發展時間軸">
+    <h3>發展時間軸</h3>
+    <ol>
+      {AI_WORKFLOW_TIMELINE.map((period) => {
+        const panelId = `${idPrefix}-period-panel-${period.id}`;
+        const isRelated = period.parts.includes(seriesPart ?? -1);
+        return (
+          <li class:list={{ 'timeline-period': true, 'period-related': isRelated }} data-period-entry>
+            <button
+              id={`${idPrefix}-period-toggle-${period.id}`}
+              class="period-toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls={panelId}
+              data-period-toggle
+            >
+              <span class="period-date">{period.dateLabel}</span>
+              <span class="period-title">{period.title}</span>
+            </button>
+            <div id={panelId} class="timeline-period-panel" data-period-panel>
+              <div class="timeline-tabs">
+                <div class="timeline-tab-list" role="tablist" aria-label={`${period.dateLabel}的故事`}>
+                  {period.tabs.map((tab, index) => {
+                    const tabId = `${idPrefix}-tab-${period.id}-${index + 1}`;
+                    const tabPanelId = `${idPrefix}-tabpanel-${period.id}-${index + 1}`;
+                    return (
+                      <button
+                        id={tabId}
+                        class="timeline-tab"
+                        type="button"
+                        role="tab"
+                        aria-selected={index === 0 ? 'true' : 'false'}
+                        aria-controls={tabPanelId}
+                        tabindex={index === 0 ? 0 : -1}
+                        data-timeline-tab
+                      >
+                        {tab.title}
+                      </button>
+                    );
+                  })}
+                </div>
+                {period.tabs.map((tab, index) => {
+                  const tabId = `${idPrefix}-tab-${period.id}-${index + 1}`;
+                  const tabPanelId = `${idPrefix}-tabpanel-${period.id}-${index + 1}`;
+                  return (
+                    <section
+                      id={tabPanelId}
+                      class="timeline-tab-panel"
+                      role="tabpanel"
+                      aria-labelledby={tabId}
+                      tabindex="0"
+                      data-timeline-panel
+                    >
+                      {tab.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+                    </section>
+                  );
+                })}
+              </div>
+            </div>
+          </li>
+        );
+      })}
+    </ol>
+  </section>
+</div>
