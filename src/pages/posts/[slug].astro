@@ -29,7 +29,6 @@ const coverUrl = post.data.cover ? `${base}${post.data.cover}` : undefined;
   title={post.data.title}
   description={post.data.description}
   mainClass={isAiWorkflow ? 'series-main' : undefined}
-  hideContactEmail={isAiWorkflow}
 >
   <article class:list={{ 'article-shell': true, 'series-article-shell': isAiWorkflow }}>
     {isAiWorkflow && <SeriesTimeline seriesPart={post.data.seriesPart} />}

@@ -6,10 +6,9 @@ interface Props {
   title: string;
   description?: string;
   mainClass?: string;
-  hideContactEmail?: boolean;
 }
 
-const { title, description = 'Zach 的 AI 與數學學習部落格', mainClass, hideContactEmail = false } = Astro.props;
+const { title, description = 'Zach 的 AI 與數學學習部落格', mainClass } = Astro.props;
 const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
@@ -69,7 +68,7 @@ const basePath = base.replace(/\/+$/, '') || '/';
         <div class="footer-links">
           <ViewCount path="" label="瀏覽次數" />
           <a href="https://github.com/ai-lish/zach-ai-blog" target="_blank" rel="noopener">GitHub</a>
-          {!hideContactEmail && <a href="mailto:zach@example.com">Email</a>}
+          <a href="mailto:zach@example.com">Email</a>
         </div>
       </div>
     </footer>

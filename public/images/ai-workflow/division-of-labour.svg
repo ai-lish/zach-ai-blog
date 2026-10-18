@@ -43,7 +43,7 @@
   <text class="label" x="410" y="814" text-anchor="middle">Claude 用量不足時</text>
   <text class="small" x="410" y="866" text-anchor="middle">由 Codex 專門 thread</text>
   <text class="small" x="410" y="906" text-anchor="middle">讀取 Claude 記錄並接手</text>
-  <text class="small" x="410" y="946" text-anchor="middle">協調多條 Codex thread</text>
-  <path class="arrow" d="M410 951V985" marker-end="url(#arrow-head)" />
+  <text class="small" x="410" y="934" text-anchor="middle">協調多條 Codex thread</text>
+  <path class="arrow" d="M410 952V984" marker-end="url(#arrow-head)" />
   <text class="small" x="410" y="1028" text-anchor="middle">再交回合併／部署前批准</text>
 </svg>
