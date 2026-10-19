@@ -11,6 +11,7 @@ const posts = defineCollection({
     cover: z.string().optional(),
     series: z.string().optional(),
     seriesPart: z.number().int().positive().optional(),
+    developmentStages: z.array(z.string()).optional(),
   }),
 });
 

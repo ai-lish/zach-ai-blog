@@ -3,6 +3,7 @@ title: "ComfyUI Desktop 實戰：RTX 5080 由 CUDA 錯誤到成功生成 SDXL"
 pubDate: 2026-09-05
 description: "以 Windows 11、RTX 5080 16GB 與 Animagine XL 為例，示範本地模型路徑、第一個 SDXL workflow，以及 CUDA unknown error 的實際排查方法。"
 cover: "images/comfyui-desktop-sdxl-baseline.png"
+developmentStages: []
 ---
 
 這篇文章記錄一次完整的 ComfyUI Desktop 新手實戰：由安裝後設定模型資料夾、建立第一個 SDXL workflow，到遇到 `CUDA error: unknown error`，最後在 RTX 5080 上成功生成第一張動漫風圖片。

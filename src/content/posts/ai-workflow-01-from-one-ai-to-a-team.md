@@ -5,6 +5,13 @@ description: "一位香港中學數學老師回顧如何由 Gemini 課堂小遊�
 category: notes
 series: ai-workflow
 seriesPart: 1
+developmentStages:
+  - 2025-november
+  - 2026-march
+  - 2026-may-june
+  - 2026-june-july
+  - 2026-september
+  - 2026-october
 ---
 
 ## 本講重點
