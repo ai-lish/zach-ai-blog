@@ -3,6 +3,7 @@ title: "MiniMax H3 本機實戰：由 T2V 基礎到 I2V／FL2V Workflow"
 pubDate: 2026-09-05
 description: "以 RTX 5080 16GB、ComfyUI Desktop 與本機 Qwen3-VL text encoder，逐步建立已驗證的 H3 T2V 及 I2V／FL2V workflow。"
 cover: "images/minimax-h3-i2v-errors.png"
+developmentStages: []
 ---
 
 這篇文章記錄在 Windows 11 上建構 MiniMax H3 本機 video workflow 的實際步驟。目標是先跑通一條可以重現的 Text-to-Video（T2V）管線，再理解 Image-to-Video（I2V）及 First/Last-Frame-to-Video（FL2V）的輸入差異。

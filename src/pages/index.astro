@@ -2,22 +2,30 @@
 import Layout from '../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 import ViewCount from '../components/ViewCount.astro';
+import { AI_WORKFLOW_TIMELINE } from '../data/ai-workflow-timeline';
 
 const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
 const allPosts = await getCollection('posts');
-const posts = allPosts.filter(({ data }) => data.category !== 'material-design').sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-);
 const materialRecordCount = allPosts.filter(({ data }) => data.category === 'material-design').length;
-const featuredPost = posts[0];
-const otherPosts = posts.slice(1);
+const experimentCount = allPosts.length - materialRecordCount;
+const timelineStages = AI_WORKFLOW_TIMELINE.map((period) => ({
+  period,
+  posts: allPosts
+    .filter(({ data }) => data.developmentStages?.includes(period.id))
+    .sort((a, b) => a.data.title.localeCompare(b.data.title, 'zh-Hant')),
+}));
+const mappedPostIds = new Set(timelineStages.flatMap(({ posts }) => posts.map(({ id }) => id)));
+const unconfirmedPosts = allPosts
+  .filter(({ id }) => !mappedPostIds.has(id))
+  .sort((a, b) => a.data.title.localeCompare(b.data.title, 'zh-Hant'));
 const formatDate = (date: Date) => date.toLocaleDateString('zh-Hant', {
   year: 'numeric',
   month: 'long',
   day: 'numeric',
 });
+const categoryLabel = (category: string) => category === 'material-design' ? '教材設計記錄' : '文章筆記';
 ---
 
 <Layout title="Zach's Blog - AI 與數學學習" description="Zach 的 AI 與數學學習部落格">
@@ -29,7 +37,7 @@ const formatDate = (date: Date) => date.toLocaleDateString('zh-Hant', {
         記錄實際試過的工具、流程與判斷，讓下一次遇到同一個問題時，可以少走一點彎路。
       </p>
       <div class="hero-actions">
-        <a class="button button-primary" href="#latest">閱讀最新實驗 <span aria-hidden="true">↗</span></a>
+        <a class="button button-primary" href="#development-timeline">按發展階段瀏覽 <span aria-hidden="true">↘</span></a>
         <a class="button button-quiet" href={`${base}material-design/`}>看教材設計記錄</a>
       </div>
     </div>
@@ -43,9 +51,87 @@ const formatDate = (date: Date) => date.toLocaleDateString('zh-Hant', {
   </section>
 
   <section class="home-stats" aria-label="網站概覽">
-    <div class="stat-card"><span class="stat-value">{posts.length}</span><span class="stat-label">篇實驗筆記</span></div>
+    <div class="stat-card"><span class="stat-value">{experimentCount}</span><span class="stat-label">篇實驗筆記</span></div>
     <div class="stat-card"><span class="stat-value">{materialRecordCount}</span><span class="stat-label">份教材記錄</span></div>
     <div class="stat-card"><span class="stat-value">AI × Math</span><span class="stat-label">主要探索方向</span></div>
+  </section>
+
+  <section id="development-timeline" class="archive-section home-development-timeline" aria-labelledby="development-timeline-title">
+    <div class="section-heading">
+      <div><p class="section-kicker">文章索引</p><h2 id="development-timeline-title">按實際發展階段瀏覽</h2></div>
+      <span class="section-count">{allPosts.length} 篇文章</span>
+    </div>
+    <p class="home-development-timeline-intro">
+      時段依已記錄的發展階段排列；每篇文章的發表日期只作資訊，不用來推定所屬時段。一篇文章可以出現在多個階段。未能核實時段的文章列於時間線末端。
+    </p>
+
+    <ol class="development-stage-list">
+      {timelineStages.map(({ period, posts }) => (
+        <li id={`stage-${period.id}`} class="development-stage">
+          <header class="development-stage-heading">
+            <p class="development-stage-date">{period.dateLabel}</p>
+            <h3>{period.title}</h3>
+          </header>
+          <div class="development-stage-content">
+            {period.tabs.flatMap((tab) => tab.paragraphs).map((paragraph) => (
+              <p class="development-stage-summary">{paragraph}</p>
+            ))}
+            {posts.length > 0 ? (
+              <div class="post-list development-stage-posts">
+                {posts.map((post) => (
+                  <a class="post-row" href={`${base}posts/${post.id}/`}>
+                    <span class="post-row-arrow" aria-hidden="true">↗</span>
+                    <span class="post-row-copy">
+                      <span class="post-label">{categoryLabel(post.data.category)}</span>
+                      <h3>{post.data.title}</h3>
+                      {post.data.description && <span>{post.data.description}</span>}
+                    </span>
+                    <span class="post-row-meta">
+                      <time datetime={post.data.pubDate.toISOString()}>發表 {formatDate(post.data.pubDate)}</time>
+                      <ViewCount path={`${base}posts/${post.id}/`} label="瀏覽" />
+                    </span>
+                  </a>
+                ))}
+              </div>
+            ) : (
+              <p class="development-stage-empty">目前未有文章連結到這個階段。</p>
+            )}
+          </div>
+        </li>
+      ))}
+
+      <li id="stage-to-confirm" class="development-stage development-stage-unconfirmed">
+        <header class="development-stage-heading">
+          <p class="development-stage-date">時期待確認</p>
+          <h3>未能核實所屬階段</h3>
+        </header>
+        <div class="development-stage-content">
+          <p class="development-stage-summary">
+            這些文章目前沒有足夠的內容證據連結到以上時段。發表日期會保留為文章資訊，不作階段推定。
+          </p>
+          {unconfirmedPosts.length > 0 ? (
+            <div class="post-list development-stage-posts">
+              {unconfirmedPosts.map((post) => (
+                <a class="post-row" href={`${base}posts/${post.id}/`}>
+                  <span class="post-row-arrow" aria-hidden="true">↗</span>
+                  <span class="post-row-copy">
+                    <span class="post-label">{categoryLabel(post.data.category)}</span>
+                    <h3>{post.data.title}</h3>
+                    {post.data.description && <span>{post.data.description}</span>}
+                  </span>
+                  <span class="post-row-meta">
+                    <time datetime={post.data.pubDate.toISOString()}>發表 {formatDate(post.data.pubDate)}</time>
+                    <ViewCount path={`${base}posts/${post.id}/`} label="瀏覽" />
+                  </span>
+                </a>
+              ))}
+            </div>
+          ) : (
+            <p class="development-stage-empty">目前所有文章均已連結到已記錄階段。</p>
+          )}
+        </div>
+      </li>
+    </ol>
   </section>
 
   <section class="archive-section purpose-section" aria-labelledby="material-design-title">
@@ -55,68 +141,4 @@ const formatDate = (date: Date) => date.toLocaleDateString('zh-Hant', {
     </div>
     <p class="home-intro-copy">由學習目標、題目與互動活動，到試用觀察及修訂，記下每份教材背後的設計思路。</p>
   </section>
-
-  {featuredPost && (
-    <section id="latest" class="featured-section" aria-labelledby="featured-title">
-      <div class="section-heading">
-        <div><p class="section-kicker">最新實驗</p><h2>最近一次記錄</h2></div>
-        <span class="section-count">{formatDate(featuredPost.data.pubDate)}</span>
-      </div>
-
-      <a class="feature-story" href={`${base}posts/${featuredPost.id}/`}>
-        <div class="feature-media">
-          {featuredPost.data.cover ? (
-            <img
-              src={`${base}${featuredPost.data.cover}`}
-              alt={featuredPost.data.title}
-              loading="eager"
-            />
-          ) : (
-            <img src={`${base}images/placeholder.svg`} alt="" loading="eager" />
-          )}
-        </div>
-        <div class="feature-copy">
-          <p class="post-label">本地 AI 實戰</p>
-          <h2 id="featured-title">{featuredPost.data.title}</h2>
-          {featuredPost.data.description && (
-            <p class="feature-description">{featuredPost.data.description}</p>
-          )}
-          <div class="feature-meta">
-            <span class="read-link">閱讀全文 <span aria-hidden="true">↗</span></span>
-            <ViewCount path={`${base}posts/${featuredPost.id}/`} label="瀏覽" />
-          </div>
-        </div>
-      </a>
-    </section>
-  )}
-
-  {otherPosts.length > 0 && (
-    <section class="archive-section" aria-labelledby="archive-title">
-      <div class="section-heading">
-        <div><p class="section-kicker">文章索引</p><h2 id="archive-title">其他文章</h2></div>
-        <span class="section-count">{otherPosts.length} 篇</span>
-      </div>
-
-      <div class="post-list">
-        {otherPosts.map((post) => (
-          <a class="post-row" href={`${base}posts/${post.id}/`}>
-            <span class="post-row-arrow" aria-hidden="true">↗</span>
-            <span class="post-row-copy">
-              <span class="post-label">筆記</span>
-              <h3>{post.data.title}</h3>
-              {post.data.description && <span>{post.data.description}</span>}
-            </span>
-            <span class="post-row-meta">
-              <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
-              <ViewCount path={`${base}posts/${post.id}/`} label="瀏覽" />
-            </span>
-          </a>
-        ))}
-      </div>
-    </section>
-  )}
-
-  {posts.length === 0 && (
-    <p class="empty-state">暫時未有文章。</p>
-  )}
 </Layout>

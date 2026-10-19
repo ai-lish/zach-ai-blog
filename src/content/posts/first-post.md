@@ -2,6 +2,7 @@
 title: "關於我與這個部落格"
 pubDate: 2026-04-27
 description: "嗨，我係 Zach，係香港教數學的老師。這篇文章介紹我點解開始寫 blog，以及我想分享啲咩。"
+developmentStages: []
 ---
 
 大家好，我係 **Zach Li**。
