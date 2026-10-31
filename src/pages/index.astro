@@ -61,8 +61,8 @@ const categoryLabel = (post: (typeof allPosts)[number]) => post.data.category ==
         <p class="in-progress-kicker">正在進行</p>
         {latestEpisode && latestSeriesPost ? (
           <a class="in-progress-series" href={`${base}posts/${latestSeriesPost.id}/`}>
-            <span class="in-progress-meta">系列 · 第 {String(latestEpisode.part).padStart(2, '0')}／{String(AI_WORKFLOW_SERIES.episodes.length).padStart(2, '0')} 講</span>
-            <strong>{latestEpisode.title}</strong>
+            <span class="in-progress-meta">系列 · 第 {String(latestEpisode.part).padStart(2, '0')}／{String(AI_WORKFLOW_SERIES.episodes.length).padStart(2, '0')} 講 · {latestEpisode.title}</span>
+            <strong>{AI_WORKFLOW_SERIES.title}</strong>
             <span class="series-progress-track" role="img" aria-label={`已出版 ${publishedByPart.size} 講，共 ${AI_WORKFLOW_SERIES.episodes.length} 講`}>
               {AI_WORKFLOW_SERIES.episodes.map((episode) => (
                 <span class:list={{ 'is-published': publishedByPart.has(episode.part) }} aria-hidden="true"></span>
@@ -91,7 +91,7 @@ const categoryLabel = (post: (typeof allPosts)[number]) => post.data.category ==
 
     <section class="featured-section" aria-labelledby="series-title">
       <div class="section-heading">
-        <div><h2 id="series-title">精選系列</h2></div>
+        <div><p class="section-kicker">精選系列</p><h2 id="series-title">{AI_WORKFLOW_SERIES.title}</h2></div>
         <span class="section-count">{AI_WORKFLOW_SERIES.episodes.length} 講</span>
       </div>
       <ol class="featured-series-grid">

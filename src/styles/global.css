@@ -177,7 +177,17 @@ button {
 
 .brand-copy {
   display: inline-flex;
+  flex-direction: column;
   align-items: center;
+}
+
+.brand-copy small {
+  margin-top: 0.12rem;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  font-weight: 400;
+  line-height: 1.2;
 }
 
 .dark .brand-mark,
@@ -448,6 +458,10 @@ button {
 .highlighter {
   padding-inline: 0.08em;
   background: linear-gradient(transparent 62%, var(--yellow) 62%);
+}
+
+.dark .highlighter {
+  background: linear-gradient(transparent 62%, rgba(255, 216, 77, 0.35) 62%);
 }
 
 .home-intro-copy {
@@ -2463,6 +2477,10 @@ button {
 }
 
 @media (max-width: 560px) {
+  .brand-copy small {
+    display: none;
+  }
+
   .site-header-inner {
     width: min(calc(100% - 1rem), 72.5rem);
   }
