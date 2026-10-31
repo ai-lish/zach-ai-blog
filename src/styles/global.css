@@ -2328,3 +2328,227 @@ a, button {
     left: -1.32rem;
   }
 }
+
+.ideas-intro {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.ideas-intro .home-intro-main {
+  max-width: 48rem;
+}
+
+.idea-groups {
+  display: grid;
+  gap: 2.5rem;
+}
+
+.idea-group-heading {
+  margin-bottom: 0.8rem;
+}
+
+.idea-group-heading h3 {
+  margin: 0;
+  color: var(--color-ink);
+  font-size: 1.2rem;
+}
+
+.dark .idea-group-heading h3 {
+  color: var(--color-ink-dark);
+}
+
+.idea-empty-state {
+  margin: 1rem 0 0;
+  text-align: left;
+}
+
+.idea-progress {
+  min-width: 0;
+  margin-bottom: 1.75rem;
+  padding: 1.25rem;
+  border: 1px solid var(--color-rule);
+  border-radius: 0.9rem;
+  background: var(--color-surface);
+}
+
+.dark .idea-progress {
+  border-color: var(--color-rule-dark);
+  background: var(--color-surface-dark);
+}
+
+.idea-progress-heading h2 {
+  margin: 0.25rem 0 0;
+  color: var(--color-ink);
+  font-size: 1.35rem;
+}
+
+.dark .idea-progress-heading h2 {
+  color: var(--color-ink-dark);
+}
+
+.idea-progress-stages {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.55rem;
+  margin: 1rem 0 1.25rem;
+  padding: 0;
+  list-style: none;
+}
+
+.idea-progress-stage {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem;
+  border: 1px solid var(--color-rule);
+  border-radius: 0.65rem;
+  color: var(--color-muted);
+  font-size: 0.85rem;
+  overflow-wrap: anywhere;
+}
+
+.dark .idea-progress-stage {
+  border-color: var(--color-rule-dark);
+  color: var(--color-muted-dark);
+}
+
+.idea-stage-marker {
+  display: grid;
+  width: 1.55rem;
+  height: 1.55rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--color-rule);
+  color: var(--color-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.idea-stage-state {
+  margin-left: auto;
+  color: inherit;
+  font-size: 0.68rem;
+  white-space: nowrap;
+}
+
+.dark .idea-stage-marker {
+  background: var(--color-rule-dark);
+  color: var(--color-muted-dark);
+}
+
+.idea-progress-stage.is-complete {
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+  color: var(--color-accent-hover);
+}
+
+.dark .idea-progress-stage.is-complete {
+  border-color: var(--color-accent-dark);
+  background: var(--color-accent-soft-dark);
+  color: var(--color-accent-dark);
+}
+
+.idea-progress-stage.is-complete .idea-stage-marker,
+.idea-progress-stage.is-current .idea-stage-marker {
+  background: var(--color-accent);
+  color: #fff;
+}
+
+.dark .idea-progress-stage.is-complete .idea-stage-marker,
+.dark .idea-progress-stage.is-current .idea-stage-marker {
+  background: var(--color-accent-dark);
+  color: var(--color-paper-dark);
+}
+
+.idea-progress-stage.is-current {
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+  color: var(--color-accent-hover);
+  font-weight: 700;
+}
+
+.dark .idea-progress-stage.is-current {
+  border-color: var(--color-accent-dark);
+  background: var(--color-accent-soft-dark);
+  color: var(--color-accent-dark);
+}
+
+.idea-progress-log {
+  display: grid;
+  gap: 0.9rem;
+  margin: 0;
+  padding: 0 0 0 1rem;
+  border-left: 1px solid var(--color-rule);
+  list-style: none;
+}
+
+.dark .idea-progress-log {
+  border-color: var(--color-rule-dark);
+}
+
+.idea-progress-log-entry {
+  min-width: 0;
+}
+
+.idea-progress-log-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.idea-progress-log-meta time {
+  color: var(--color-muted);
+  font-size: 0.82rem;
+}
+
+.dark .idea-progress-log-meta time {
+  color: var(--color-muted-dark);
+}
+
+.idea-stage-badge {
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: var(--color-accent-soft);
+  color: var(--color-accent-hover);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.dark .idea-stage-badge {
+  background: var(--color-accent-soft-dark);
+  color: var(--color-accent-dark);
+}
+
+.idea-progress-log-entry p {
+  margin: 0.3rem 0 0;
+  color: var(--color-ink);
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+
+.dark .idea-progress-log-entry p {
+  color: var(--color-ink-dark);
+}
+
+.idea-last-updated {
+  margin: 1rem 0 0.35rem;
+  color: var(--color-muted);
+  font-size: 0.82rem;
+}
+
+.dark .idea-last-updated {
+  color: var(--color-muted-dark);
+}
+
+.idea-back-link {
+  display: inline-block;
+  margin-top: 0.25rem;
+}
+
+@media (max-width: 600px) {
+  .idea-progress-stages {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

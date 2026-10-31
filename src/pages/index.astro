@@ -13,12 +13,12 @@ const experimentCount = allPosts.length - materialRecordCount;
 const timelineStages = AI_WORKFLOW_TIMELINE.map((period) => ({
   period,
   posts: allPosts
-    .filter(({ data }) => data.developmentStages?.includes(period.id))
+    .filter(({ data }) => !data.idea && data.developmentStages?.includes(period.id))
     .sort((a, b) => a.data.title.localeCompare(b.data.title, 'zh-Hant')),
 }));
 const mappedPostIds = new Set(timelineStages.flatMap(({ posts }) => posts.map(({ id }) => id)));
 const unconfirmedPosts = allPosts
-  .filter(({ id }) => !mappedPostIds.has(id))
+  .filter(({ id, data }) => !data.idea && !mappedPostIds.has(id))
   .sort((a, b) => a.data.title.localeCompare(b.data.title, 'zh-Hant'));
 const formatDate = (date: Date) => date.toLocaleDateString('zh-Hant', {
   year: 'numeric',

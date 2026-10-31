@@ -2,6 +2,7 @@
 import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import SeriesTimeline from '../../components/SeriesTimeline.astro';
+import IdeaProgress from '../../components/IdeaProgress.astro';
 import ViewCount from '../../components/ViewCount.astro';
 
 export async function getStaticPaths() {
@@ -16,6 +17,7 @@ const { post } = Astro.props;
 const { Content } = await render(post);
 const isMaterialDesign = post.data.category === 'material-design';
 const isAiWorkflow = post.data.series === 'ai-workflow';
+const idea = post.data.idea;
 const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
@@ -52,6 +54,8 @@ const coverUrl = post.data.cover ? `${base}${post.data.cover}` : undefined;
         <img src={coverUrl} alt={post.data.title} loading="eager" />
       </figure>
     )}
+
+    {idea && <IdeaProgress idea={idea} />}
 
     <div class="article-prose prose prose-stone max-w-none dark:prose-invert">
       <Content />
