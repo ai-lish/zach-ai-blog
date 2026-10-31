@@ -4,6 +4,8 @@ import Layout from '../../layouts/Layout.astro';
 import SeriesTimeline from '../../components/SeriesTimeline.astro';
 import IdeaProgress from '../../components/IdeaProgress.astro';
 import ViewCount from '../../components/ViewCount.astro';
+import { AI_WORKFLOW_SERIES } from '../../data/ai-workflow-timeline';
+import { IDEA_STAGES } from '../../data/idea-stages';
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts');
@@ -16,8 +18,11 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content } = await render(post);
 const isMaterialDesign = post.data.category === 'material-design';
-const isAiWorkflow = post.data.series === 'ai-workflow';
+const isAiWorkflow = post.data.series === AI_WORKFLOW_SERIES.id;
 const idea = post.data.idea;
+const ideaStageLabel = idea
+  ? IDEA_STAGES.find((stage) => stage.id === idea.status)?.label
+  : undefined;
 const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
@@ -25,77 +30,94 @@ const siteUrl = Astro.site ?? new URL('https://ai-lish.github.io');
 const postUrl = new URL(`${base}posts/${post.id}/`, siteUrl).toString();
 const postTitle = post.data.title;
 const coverUrl = post.data.cover ? `${base}${post.data.cover}` : undefined;
+const backHref = idea ? `${base}ideas/` : isMaterialDesign ? `${base}material-design/` : base;
+const backLabel = idea ? '← 返回想法頁' : isMaterialDesign ? '← 教材設計記錄' : '← 所有文章';
+const categoryLabel = isMaterialDesign ? '教材設計記錄' : post.data.cover ? '本地 AI 實戰' : '部落格筆記';
+const seriesPartLabel = typeof post.data.seriesPart === 'number'
+  ? `第 ${String(post.data.seriesPart).padStart(2, '0')}／${String(AI_WORKFLOW_SERIES.episodes.length).padStart(2, '0')} 講`
+  : undefined;
 ---
 
-<Layout
-  title={post.data.title}
-  description={post.data.description}
-  mainClass={isAiWorkflow ? 'series-main' : undefined}
->
-  <article class:list={{ 'article-shell': true, 'series-article-shell': isAiWorkflow }}>
-    {isAiWorkflow && <SeriesTimeline seriesPart={post.data.seriesPart} />}
-    <header class="article-header">
-      <a href={isMaterialDesign ? `${base}material-design/` : base} class="back-link">{isMaterialDesign ? "← 教材設計記錄" : "← 所有文章"}</a>
-      <p class="eyebrow">{isMaterialDesign ? '教材設計記錄' : post.data.cover ? '本地 AI 實戰' : '部落格筆記'}</p>
-      <h1>{post.data.title}</h1>
-      <div class="article-meta">
-        <time datetime={post.data.pubDate.toISOString()}>{post.data.pubDate.toLocaleDateString('zh-Hant', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-        })}</time>
-        <span class="meta-dot" aria-hidden="true">·</span>
-        <ViewCount label="瀏覽" />
+<Layout title={post.data.title} description={post.data.description} mainClass={isAiWorkflow ? 'series-main' : undefined}>
+  <article class="article-shell">
+    <header class="article-header grid-paper">
+      <div class="article-hero-inner page-container">
+        <a href={backHref} class="back-link">{backLabel}</a>
+        <p class="article-badges">
+          {isAiWorkflow && seriesPartLabel ? (
+            <span class="article-series-badge">系列 · {seriesPartLabel}</span>
+          ) : idea && ideaStageLabel ? (
+            <span class="article-idea-badge">想法 · {ideaStageLabel}</span>
+          ) : null}
+          <span class="article-category-badge">{categoryLabel}</span>
+        </p>
+        <h1>{post.data.title}</h1>
+        {post.data.description && <p class="article-description">{post.data.description}</p>}
+        <div class="article-meta">
+          <time datetime={post.data.pubDate.toISOString()}>{post.data.pubDate.toLocaleDateString('zh-Hant', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          })}</time>
+          <span class="meta-dot" aria-hidden="true">·</span>
+          <ViewCount label="瀏覽" />
+        </div>
       </div>
     </header>
 
-    {coverUrl && (
-      <figure class="article-cover">
-        <img src={coverUrl} alt={post.data.title} loading="eager" />
-      </figure>
-    )}
+    <div class:list={['article-layout', { 'article-layout-series': isAiWorkflow }]}>
+      {isAiWorkflow && <SeriesTimeline seriesPart={post.data.seriesPart} />}
 
-    {idea && <IdeaProgress idea={idea} />}
+      <div class="article-content">
+        {coverUrl && (
+          <figure class="article-cover">
+            <img src={coverUrl} alt={post.data.title} loading="eager" />
+          </figure>
+        )}
 
-    <div class="article-prose prose prose-stone max-w-none dark:prose-invert">
-      <Content />
-    </div>
+        {idea && <IdeaProgress idea={idea} />}
 
-    <div class="share-strip">
-      <p>分享這篇文章</p>
-      <div class="share-actions">
-        <a
-          href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(postTitle)}&url=${encodeURIComponent(postUrl)}`}
-          target="_blank"
-          rel="noopener"
-          class="share-btn"
-          aria-label="分享到 Twitter/X"
-        >
-          <svg class="share-icon" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
-          <span class="btn-label">Twitter/X</span>
-        </a>
-        <a
-          href={`https://wa.me/?text=${encodeURIComponent(postTitle + ' ' + postUrl)}`}
-          target="_blank"
-          rel="noopener"
-          class="share-btn"
-          aria-label="分享到 WhatsApp"
-        >
-          <svg class="share-icon" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.198-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z" /></svg>
-          <span class="btn-label">WhatsApp</span>
-        </a>
-        <button id="copy-link" class="share-btn" type="button" aria-label="複製文章連結">
-          <svg class="share-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2m-6 12h8a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-8a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2Z" />
-          </svg>
-          <span class="btn-label">複製連結</span>
-        </button>
+        <div class="article-prose">
+          <Content />
+        </div>
+
+        <div class="share-strip">
+          <p>分享這篇文章</p>
+          <div class="share-actions">
+            <a
+              href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(postTitle)}&url=${encodeURIComponent(postUrl)}`}
+              target="_blank"
+              rel="noopener"
+              class="share-btn"
+              aria-label="分享到 Twitter/X"
+            >
+              <svg class="share-icon" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
+              <span class="btn-label">Twitter/X</span>
+            </a>
+            <a
+              href={`https://wa.me/?text=${encodeURIComponent(postTitle + ' ' + postUrl)}`}
+              target="_blank"
+              rel="noopener"
+              class="share-btn"
+              aria-label="分享到 WhatsApp"
+            >
+              <svg class="share-icon" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.198-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z" /></svg>
+              <span class="btn-label">WhatsApp</span>
+            </a>
+            <button id="copy-link" class="share-btn" type="button" aria-label="複製文章連結">
+              <svg class="share-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2m-6 12h8a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-8a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2Z" />
+              </svg>
+              <span class="btn-label">複製連結</span>
+            </button>
+          </div>
+        </div>
+
+        <footer class="article-footer">
+          <a href={base}>← 返回首頁</a>
+        </footer>
       </div>
     </div>
-
-    <footer class="article-footer">
-      <a href={base}>← 返回首頁</a>
-    </footer>
   </article>
 
   <script is:inline>
@@ -117,6 +139,19 @@ const coverUrl = post.data.cover ? `${base}${post.data.cover}` : undefined;
       window.addEventListener('scroll', updateProgress, { passive: true });
       updateProgress();
     }
+
+    const prose = document.querySelector('.article-prose');
+    prose?.querySelectorAll('h2').forEach((heading) => {
+      const text = heading.textContent?.trim();
+      if (text === '本講重點') {
+        heading.classList.add('key-points-heading');
+        if (heading.nextElementSibling?.tagName === 'UL') heading.nextElementSibling.classList.add('key-points-list');
+      }
+      if (text === '帶走一句') {
+        heading.classList.add('takeaway-heading');
+        if (heading.nextElementSibling?.tagName === 'P') heading.nextElementSibling.classList.add('takeaway-copy');
+      }
+    });
 
     document.getElementById('copy-link')?.addEventListener('click', function() {
       navigator.clipboard.writeText(window.location.href).then(() => {
