@@ -9,10 +9,11 @@ const base = import.meta.env.BASE_URL.endsWith('/')
 const ideaPosts = (await getCollection('posts', ({ data }) => data.idea !== undefined))
   .map((post) => {
     const idea = post.data.idea!;
+    const orderedLog = [...idea.log].sort((a, b) => a.date.valueOf() - b.date.valueOf());
     return {
       post,
       idea,
-      lastUpdate: idea.log[idea.log.length - 1].date,
+      lastUpdate: orderedLog[orderedLog.length - 1].date,
     };
   })
   .sort((a, b) => a.post.data.title.localeCompare(b.post.data.title, 'zh-Hant'));
