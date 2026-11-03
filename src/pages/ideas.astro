@@ -1,0 +1,75 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import { IDEA_STAGES } from '../data/idea-stages';
+
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const ideaPosts = (await getCollection('posts', ({ data }) => data.idea !== undefined))
+  .map((post) => {
+    const idea = post.data.idea!;
+    const orderedLog = [...idea.log].sort((a, b) => a.date.valueOf() - b.date.valueOf());
+    return {
+      post,
+      idea,
+      lastUpdate: orderedLog[orderedLog.length - 1].date,
+    };
+  })
+  .sort((a, b) => a.post.data.title.localeCompare(b.post.data.title, 'zh-Hant'));
+const ideasByStage = IDEA_STAGES.map((stage) => ({
+  stage,
+  ideas: ideaPosts.filter(({ idea }) => idea.status === stage.id),
+}));
+const formatDate = (date: Date) => date.toLocaleDateString('zh-Hant', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<Layout title="想法 | Zach's Blog" description="這裏記錄未來想做的專案，每個想法按構思、實作、更新、完結逐步更新。">
+  <section class="home-intro ideas-intro" aria-labelledby="ideas-title">
+    <div class="home-intro-main">
+      <h1 id="ideas-title">想法</h1>
+      <p class="home-intro-copy">這裏記錄未來想做的專案，每個想法按「構思 → 實作 → 更新 → 完結」逐步更新。</p>
+    </div>
+  </section>
+
+  <section class="archive-section ideas-archive" aria-labelledby="ideas-list-title">
+    <div class="section-heading">
+      <div><p class="section-kicker">想法紀錄</p><h2 id="ideas-list-title">所有想法</h2></div>
+      <span class="section-count">{ideaPosts.length} 項</span>
+    </div>
+
+    <div class="idea-groups">
+      {ideasByStage.map(({ stage, ideas }) => (
+        <section class="idea-stage-group" aria-labelledby={`idea-stage-${stage.id}`}>
+          <div class="section-heading idea-group-heading">
+            <h3 id={`idea-stage-${stage.id}`}>{stage.label}</h3>
+            <span class="section-count">{ideas.length} 項</span>
+          </div>
+          {ideas.length > 0 ? (
+            <div class="post-list">
+              {ideas.map(({ post, lastUpdate }) => (
+                <a class="post-row" href={`${base}posts/${post.id}/`}>
+                  <span class="post-row-arrow" aria-hidden="true">↗</span>
+                  <span class="post-row-copy">
+                    <span class="post-label">{stage.label}</span>
+                    <h3>{post.data.title}</h3>
+                    {post.data.description && <span>{post.data.description}</span>}
+                  </span>
+                  <span class="post-row-meta">
+                    <time datetime={lastUpdate.toISOString()}>最後更新 {formatDate(lastUpdate)}</time>
+                  </span>
+                </a>
+              ))}
+            </div>
+          ) : (
+            <p class="empty-state idea-empty-state">暫時沒有。</p>
+          )}
+        </section>
+      ))}
+    </div>
+  </section>
+</Layout>

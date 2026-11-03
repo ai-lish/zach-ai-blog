@@ -8,17 +8,18 @@ const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
 const allPosts = await getCollection('posts');
-const materialRecordCount = allPosts.filter(({ data }) => data.category === 'material-design').length;
-const experimentCount = allPosts.length - materialRecordCount;
+const countedPosts = allPosts.filter(({ data }) => !data.idea);
+const materialRecordCount = countedPosts.filter(({ data }) => data.category === 'material-design').length;
+const experimentCount = countedPosts.length - materialRecordCount;
 const timelineStages = AI_WORKFLOW_TIMELINE.map((period) => ({
   period,
   posts: allPosts
-    .filter(({ data }) => data.developmentStages?.includes(period.id))
+    .filter(({ data }) => !data.idea && data.developmentStages?.includes(period.id))
     .sort((a, b) => a.data.title.localeCompare(b.data.title, 'zh-Hant')),
 }));
 const mappedPostIds = new Set(timelineStages.flatMap(({ posts }) => posts.map(({ id }) => id)));
 const unconfirmedPosts = allPosts
-  .filter(({ id }) => !mappedPostIds.has(id))
+  .filter(({ id, data }) => !data.idea && !mappedPostIds.has(id))
   .sort((a, b) => a.data.title.localeCompare(b.data.title, 'zh-Hant'));
 const formatDate = (date: Date) => date.toLocaleDateString('zh-Hant', {
   year: 'numeric',
@@ -59,7 +60,7 @@ const categoryLabel = (category: string) => category === 'material-design' ? '�
   <section id="development-timeline" class="archive-section home-development-timeline" aria-labelledby="development-timeline-title">
     <div class="section-heading">
       <div><p class="section-kicker">文章索引</p><h2 id="development-timeline-title">按實際發展階段瀏覽</h2></div>
-      <span class="section-count">{allPosts.length} 篇文章</span>
+      <span class="section-count">{countedPosts.length} 篇文章</span>
     </div>
     <p class="home-development-timeline-intro">
       時段依已記錄的發展階段排列；每篇文章的發表日期只作資訊，不用來推定所屬時段。一篇文章可以出現在多個階段。未能核實時段的文章列於時間線末端。

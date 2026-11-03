@@ -41,6 +41,7 @@ const basePath = base.replace(/\/+$/, '') || '/';
         <nav class="site-nav" aria-label="主要導覽">
           <a class:list={{ 'is-active': currentPath === basePath }} href={base}>首頁</a>
           <a class:list={{ 'is-active': currentPath === `${basePath}/material-design` }} href={`${base}material-design/`}>教材設計記錄</a>
+          <a class:list={{ 'is-active': currentPath === `${basePath}/ideas` }} href={`${base}ideas/`}>想法</a>
           <a class:list={{ 'is-active': currentPath === `${basePath}/about` }} href={`${base}about/`}>關於</a>
           <a class:list={{ 'is-active': currentPath === `${basePath}/newsletter` }} href={`${base}newsletter/`}>訂閱</a>
           <button id="dark-toggle" type="button" aria-label="切換深色模式" title="切換深色模式">
