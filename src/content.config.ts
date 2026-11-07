@@ -14,6 +14,7 @@ const posts = defineCollection({
     seriesPart: z.number().int().positive().optional(),
     developmentStages: z.array(z.string()).optional(),
     idea: z.object({
+      name: z.string().optional(),
       status: z.enum(IDEA_STAGE_IDS),
       log: z.array(z.object({
         stage: z.enum(IDEA_STAGE_IDS),

@@ -5,16 +5,18 @@ const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
 ---
 
 <Layout title="關於 | Zach's Blog" description="了解 Zach's Blog 的目的：把 AI、數學教學和教材設計整理成可重用的公開記錄。">
-  <section class="about-hero" aria-labelledby="about-title">
-    <div class="about-hero-copy">
-      <p class="eyebrow">關於這個部落格</p>
-      <h1 id="about-title">把一次嘗試，整理成下一次可以重用的做法。</h1>
-      <p class="about-lead">我係 Zach，香港數學老師。這裏記錄我如何把 AI 工具、數學教學和教材設計放在同一個實驗流程裏。</p>
+  <section class="about-hero grid-paper" aria-labelledby="about-title">
+    <div class="page-container about-hero-inner">
+      <div class="about-hero-copy">
+        <p class="eyebrow">關於這個部落格</p>
+        <h1 id="about-title">把一次嘗試，整理成下一次可以重用的做法。</h1>
+        <p class="about-lead">我係 Zach，香港數學老師。這裏記錄我如何把 AI 工具、數學教學和教材設計放在同一個實驗流程裏。</p>
+      </div>
+      <div class="about-mark" aria-hidden="true"><span>Z</span><small>AI × MATH</small></div>
     </div>
-    <div class="about-mark" aria-hidden="true"><span>Z</span><small>AI × MATH</small></div>
   </section>
 
-  <section class="about-purpose" aria-labelledby="purpose-title">
+  <section class="about-purpose page-container" aria-labelledby="purpose-title">
     <div class="section-kicker">Repo purpose</div>
     <h2 id="purpose-title">這個 repo 的目的</h2>
     <p>zach-ai-blog 是一個公開的教學實驗檔案。它把實際試過的 AI 工具、HKDSE 數學學習方法、教材設計決定和修訂脈絡寫下來，讓自己可以回看，也讓其他老師可以理解、參考和重用。</p>
@@ -25,7 +27,7 @@ const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
     </div>
   </section>
 
-  <section class="about-grid" aria-label="作者與主題">
+  <section class="about-grid page-container" aria-label="作者與主題">
     <article class="about-card">
       <p class="section-kicker">我係邊個</p>
       <h2>Zach Li</h2>

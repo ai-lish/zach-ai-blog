@@ -1,5 +1,6 @@
 ---
 import SeriesTimelineContent from './SeriesTimelineContent.astro';
+import { AI_WORKFLOW_SERIES } from '../data/ai-workflow-timeline';
 
 interface Props {
   seriesPart?: number;
@@ -13,7 +14,7 @@ const { seriesPart } = Astro.props;
 </aside>
 
 <details class="series-mobile">
-  <summary>一個數學老師的 AI 協作流程｜系列時間軸</summary>
+  <summary>{AI_WORKFLOW_SERIES.title}｜系列時間軸</summary>
   <SeriesTimelineContent seriesPart={seriesPart} idPrefix="mobile" />
 </details>
 
