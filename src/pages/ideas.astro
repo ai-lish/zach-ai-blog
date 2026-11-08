@@ -35,17 +35,24 @@ const formatDate = (date: Date) => date.toLocaleDateString('zh-Hant', {
 <Layout title="想法 | Zach's Blog" description="未開始、製作中、已完成的專案都是想法。每個想法按「構思 → 實作 → 更新 → 完結」逐步更新。">
   <section class="ideas-hero grid-paper" aria-labelledby="ideas-title">
     <div class="page-container ideas-hero-inner">
-      <p class="eyebrow">想法紀錄</p>
       <h1 id="ideas-title">想法</h1>
       <p class="ideas-hero-copy">未開始、製作中、已完成的專案都是想法。每個想法按「構思 → 實作 → 更新 → 完結」逐步更新。</p>
       <ol class="idea-stage-pills" aria-label="各階段想法數目">
         {ideasByStage.map(({ stage, ideas }, index) => (
           <li>
-            <a class="idea-stage-pill" href={`#idea-stage-${stage.id}`}>
-              <span class="idea-stage-pill-number">0{index + 1}</span>
-              <span>{stage.label}</span>
-              <span class="idea-stage-pill-count">{ideas.length}</span>
-            </a>
+            {ideas.length > 0 ? (
+              <a class="idea-stage-pill" href={`#idea-stage-${stage.id}`}>
+                <span class="idea-stage-pill-number">0{index + 1}</span>
+                <span>{stage.label}</span>
+                <span class="idea-stage-pill-count">{ideas.length}</span>
+              </a>
+            ) : (
+              <span class="idea-stage-pill" aria-disabled="true">
+                <span class="idea-stage-pill-number">0{index + 1}</span>
+                <span>{stage.label}</span>
+                <span class="idea-stage-pill-count">{ideas.length}</span>
+              </span>
+            )}
           </li>
         ))}
       </ol>
@@ -53,13 +60,8 @@ const formatDate = (date: Date) => date.toLocaleDateString('zh-Hant', {
   </section>
 
   <div class="page-container ideas-archive">
-    <div class="section-heading ideas-page-heading">
-      <div><p class="section-kicker">想法紀錄</p><h2>所有想法</h2></div>
-      <span class="section-count">{ideaPosts.length} 個想法</span>
-    </div>
-
     <div class="idea-groups">
-      {ideasByStage.map(({ stage, ideas }) => (
+      {ideasByStage.filter(({ ideas }) => ideas.length > 0).map(({ stage, ideas }) => (
         <section id={`idea-stage-${stage.id}`} class="idea-stage-group" aria-labelledby={`idea-stage-title-${stage.id}`}>
           <div class="idea-group-heading">
             <div>
@@ -67,32 +69,27 @@ const formatDate = (date: Date) => date.toLocaleDateString('zh-Hant', {
             </div>
             <span class="section-count">{ideas.length} 個</span>
           </div>
-          {ideas.length > 0 ? (
-            <ul class="idea-card-grid">
-              {ideas.map(({ post, idea, name, lastUpdate }) => {
-                const currentStageIndex = IDEA_STAGES.findIndex((item) => item.id === idea.status);
-                return (
-                  <li>
-                    <a class="idea-card" href={`${base}posts/${post.id}/`}>
-                      <span class="idea-card-topline">
-                        <span class="idea-status-badge" data-stage={idea.status}>{stage.label}</span>
-                        <span class="idea-progress-bar" role="img" aria-label={`四個階段中的第 ${currentStageIndex + 1} 個`}>
-                          {IDEA_STAGES.map((_, index) => (
-                            <span class:list={{ 'is-reached': index <= currentStageIndex }} aria-hidden="true"></span>
-                          ))}
-                        </span>
+          <ul class="idea-card-grid">
+            {ideas.map(({ post, idea, name, lastUpdate }) => {
+              const currentStageIndex = IDEA_STAGES.findIndex((item) => item.id === idea.status);
+              return (
+                <li>
+                  <a class="idea-card" href={`${base}posts/${post.id}/`}>
+                    <span class="idea-card-topline">
+                      <span class="idea-progress-bar" role="img" aria-label={`四個階段中的第 ${currentStageIndex + 1} 個`}>
+                        {IDEA_STAGES.map((_, index) => (
+                          <span class:list={{ 'is-reached': index <= currentStageIndex }} aria-hidden="true"></span>
+                        ))}
                       </span>
-                      <strong>{name}</strong>
-                      {post.data.description && <span class="idea-card-description">{post.data.description}</span>}
-                      <span class="idea-card-updated">最後更新 <time datetime={lastUpdate.toISOString()}>{formatDate(lastUpdate)}</time></span>
-                    </a>
-                  </li>
-                );
-              })}
-            </ul>
-          ) : (
-            <p class="empty-state idea-empty-state">暫時沒有。</p>
-          )}
+                    </span>
+                    <strong>{name}</strong>
+                    {post.data.description && <span class="idea-card-description">{post.data.description}</span>}
+                    <span class="idea-card-updated">最後更新 <time datetime={lastUpdate.toISOString()}>{formatDate(lastUpdate)}</time></span>
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
         </section>
       ))}
     </div>

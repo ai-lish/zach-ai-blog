@@ -412,13 +412,10 @@ button {
 .in-progress-kicker,
 .in-progress-meta,
 .note-index,
-.stat-value,
-.stat-label,
 .section-count,
 .article-badges,
 .article-meta,
 .development-stage-date,
-.featured-episode-label,
 .idea-card-updated,
 .idea-progress-log-meta time,
 .idea-last-updated,
@@ -602,42 +599,6 @@ button {
   font-weight: 700;
 }
 
-.home-stats {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  margin-top: -1px;
-  border: 1px solid var(--rule);
-  border-radius: 0 0 14px 14px;
-  background: var(--surface-bg);
-}
-
-.stat-card {
-  display: flex;
-  min-width: 0;
-  min-height: 96px;
-  flex-direction: column;
-  justify-content: center;
-  gap: 0.2rem;
-  padding: 1rem 1.25rem;
-  border-right: 1px solid var(--rule);
-}
-
-.stat-card:last-child {
-  border-right: 0;
-}
-
-.stat-value {
-  color: var(--ink);
-  font-size: 1.4rem;
-  font-weight: 600;
-}
-
-.stat-label {
-  color: var(--muted);
-  font-size: 0.75rem;
-}
-
-.featured-section,
 .archive-section {
   padding-top: 4.5rem;
 }
@@ -671,66 +632,6 @@ button {
   color: var(--muted);
   font-size: 0.78rem;
   white-space: nowrap;
-}
-
-.featured-series-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 1rem;
-  margin: 1.3rem 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.featured-episode {
-  display: flex;
-  min-height: 190px;
-  flex-direction: column;
-  gap: 0.65rem;
-  padding: 1.2rem;
-  border: 1.5px solid var(--ink);
-  border-radius: 12px;
-  background: var(--surface-bg);
-}
-
-.featured-episode.is-published {
-  box-shadow: 4px 4px 0 var(--hard-shadow);
-}
-
-.featured-episode.is-published:hover {
-  border-color: var(--accent);
-  transform: translate(-1px, -1px);
-}
-
-.featured-episode.is-upcoming {
-  border-style: dashed;
-  border-color: var(--dash);
-  color: var(--muted);
-}
-
-.featured-episode-label {
-  color: var(--muted);
-  font-size: 0.72rem;
-  line-height: 1.5;
-}
-
-.featured-episode strong {
-  color: var(--ink);
-  font-size: 1rem;
-  line-height: 1.55;
-}
-
-.featured-episode.is-upcoming strong {
-  color: var(--muted);
-}
-
-.featured-episode time {
-  margin-top: auto;
-  padding-top: 0.7rem;
-  border-top: 1px dashed var(--dash);
-  color: var(--muted);
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
 }
 
 .home-development-timeline {
@@ -810,8 +711,7 @@ button {
   line-height: 1.5;
 }
 
-.development-stage-summary,
-.development-stage-empty {
+.development-stage-summary {
   max-width: 52rem;
   margin: 0.45rem 0 0;
   color: var(--muted);
@@ -949,12 +849,6 @@ button {
   font-size: 1.15rem;
 }
 
-.unconfirmed-posts > p {
-  margin: 0.3rem 0 0.9rem;
-  color: var(--muted);
-  font-size: 0.85rem;
-}
-
 .unconfirmed-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
@@ -989,27 +883,6 @@ button {
   color: var(--ink);
   font-size: 0.88rem;
   line-height: 1.5;
-}
-
-.purpose-section {
-  margin-bottom: 1rem;
-}
-
-.purpose-section .home-intro-copy {
-  margin-top: 0;
-}
-
-.read-link {
-  display: inline-flex;
-  min-height: 44px;
-  align-items: center;
-  gap: 0.4rem;
-  color: var(--accent);
-  font-weight: 700;
-}
-
-.read-link:hover {
-  text-decoration: underline;
 }
 
 .post-list {
@@ -1124,7 +997,7 @@ button {
   font-weight: 700;
 }
 
-.idea-stage-pill:hover {
+a.idea-stage-pill:hover {
   border-color: var(--accent);
   background: var(--accent-soft);
   color: var(--accent);
@@ -1139,10 +1012,6 @@ button {
 
 .ideas-archive {
   padding-top: 2.8rem;
-}
-
-.ideas-page-heading {
-  margin-bottom: 2rem;
 }
 
 .idea-groups {
@@ -1208,30 +1077,6 @@ button {
   gap: 0.75rem;
 }
 
-.idea-status-badge {
-  display: inline-flex;
-  min-height: 28px;
-  align-items: center;
-  padding: 0.2rem 0.65rem;
-  border: 1px solid var(--rule);
-  border-radius: 999px;
-  background: var(--accent-soft);
-  color: var(--ink);
-  font-size: 0.75rem;
-  font-weight: 700;
-}
-
-.idea-status-badge[data-stage='concept'] {
-  border-color: #13203A;
-  background: var(--yellow);
-  color: #13203A;
-}
-
-.idea-status-badge[data-stage='done'] {
-  background: var(--page-bg);
-  color: var(--muted);
-}
-
 .idea-progress-bar {
   display: grid;
   grid-template-columns: repeat(4, 18px);
@@ -1277,10 +1122,6 @@ button {
   border: 1px dashed var(--dash);
   border-radius: 10px;
   color: var(--muted);
-}
-
-.idea-empty-state {
-  max-width: 34rem;
 }
 
 .article-shell {
@@ -2399,22 +2240,6 @@ button {
     padding-block: 3rem;
   }
 
-  .home-stats {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .stat-card:nth-child(2) {
-    border-right: 0;
-  }
-
-  .stat-card:nth-child(-n + 2) {
-    border-bottom: 1px solid var(--rule);
-  }
-
-  .featured-series-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
   .development-stage {
     grid-template-columns: minmax(0, 1fr) 22px;
     column-gap: 0.6rem;
@@ -2515,23 +2340,6 @@ button {
 
   .in-progress-card {
     padding: 1.1rem;
-  }
-
-  .stat-card {
-    min-height: 82px;
-    padding: 0.8rem;
-  }
-
-  .stat-value {
-    font-size: 1.15rem;
-  }
-
-  .featured-series-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .featured-episode {
-    min-height: 140px;
   }
 
   .section-heading {

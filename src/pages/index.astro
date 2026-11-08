@@ -8,8 +8,6 @@ const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
 const allPosts = await getCollection('posts');
-const materialRecordCount = allPosts.filter(({ data }) => data.category === 'material-design').length;
-const experimentCount = allPosts.filter(({ data }) => data.category !== 'material-design' && !(data.idea !== undefined && data.series === undefined)).length;
 const ideaPosts = allPosts.filter(({ data }) => data.idea !== undefined);
 const activeIdeaCount = ideaPosts.filter(({ data }) => data.idea!.status === 'build' || data.idea!.status === 'update').length;
 const conceptIdeaCount = ideaPosts.filter(({ data }) => data.idea!.status === 'concept').length;
@@ -46,14 +44,13 @@ const categoryLabel = (post: (typeof allPosts)[number]) => post.data.category ==
   <section class="home-hero grid-paper" aria-labelledby="home-title">
     <div class="page-container home-hero-inner">
       <div class="home-hero-copy">
-        <p class="eyebrow">AI 工具 · 數學學習</p>
+        <p class="eyebrow">AI × 教學 × 生活</p>
         <h1 id="home-title">把複雜工具，寫成<span class="highlighter">可重用</span>的做法。</h1>
         <p class="home-intro-copy">
           記錄實際試過的工具、流程與判斷，讓下一次遇到同一個問題時，可以少走一點彎路。
         </p>
         <div class="hero-actions">
           <a class="button button-primary" href="#development-timeline">按發展階段瀏覽 <span aria-hidden="true">↘</span></a>
-          <a class="button button-quiet" href={`${base}ideas/`}>看想法紀錄</a>
         </div>
       </div>
 
@@ -82,48 +79,13 @@ const categoryLabel = (post: (typeof allPosts)[number]) => post.data.category ==
   </section>
 
   <div class="page-container">
-    <section class="home-stats" aria-label="網站概覽">
-      <div class="stat-card"><span class="stat-value">{experimentCount}</span><span class="stat-label">篇實驗筆記</span></div>
-      <div class="stat-card"><span class="stat-value">{materialRecordCount}</span><span class="stat-label">份教材記錄</span></div>
-      <div class="stat-card"><span class="stat-value">{ideaPosts.length}</span><span class="stat-label">個想法</span></div>
-      <div class="stat-card"><span class="stat-value">AI × Math</span><span class="stat-label">主要探索方向</span></div>
-    </section>
-
-    <section class="featured-section" aria-labelledby="series-title">
-      <div class="section-heading">
-        <div><p class="section-kicker">精選系列</p><h2 id="series-title">{AI_WORKFLOW_SERIES.title}</h2></div>
-        <span class="section-count">{AI_WORKFLOW_SERIES.episodes.length} 講</span>
-      </div>
-      <ol class="featured-series-grid">
-        {AI_WORKFLOW_SERIES.episodes.map((episode) => {
-          const publishedPost = publishedByPart.get(episode.part);
-          return (
-            <li>
-              {publishedPost ? (
-                <a class="featured-episode is-published" href={`${base}posts/${publishedPost.id}/`}>
-                  <span class="featured-episode-label">第 {String(episode.part).padStart(2, '0')} 講</span>
-                  <strong>{episode.title}</strong>
-                  <time datetime={publishedPost.data.pubDate.toISOString()}>{formatDate(publishedPost.data.pubDate)}</time>
-                </a>
-              ) : (
-                <div class="featured-episode is-upcoming">
-                  <span class="featured-episode-label">第 {String(episode.part).padStart(2, '0')} 講 · 即將推出</span>
-                  <strong>{episode.title}</strong>
-                </div>
-              )}
-            </li>
-          );
-        })}
-      </ol>
-    </section>
-
     <section id="development-timeline" class="archive-section home-development-timeline" aria-labelledby="development-timeline-title">
       <div class="section-heading">
         <div><p class="section-kicker">文章索引</p><h2 id="development-timeline-title">按實際發展階段瀏覽</h2></div>
         <span class="section-count">{timelineEntries.length + unconfirmedPosts.length} 篇文章</span>
       </div>
       <p class="home-development-timeline-intro">
-        每篇文章只在開始的時段出現一次。滑鼠指向文章（手機可點選標籤），文章涉及的所有時段會亮起。未能核實時段的文章列於時間線末端。
+        每篇文章列在開始的時段；指向或點選文章，相關時段會亮起。
       </p>
 
       <ol class="development-stage-list" data-development-timeline>
@@ -139,7 +101,7 @@ const categoryLabel = (post: (typeof allPosts)[number]) => post.data.category ==
               {period.tabs.flatMap((tab) => tab.paragraphs).map((paragraph) => (
                 <p class="development-stage-summary">{paragraph}</p>
               ))}
-              {entries.length > 0 ? (
+              {entries.length > 0 && (
                 <div class="timeline-post-list">
                   {entries.map(({ post, relatedPeriods }) => {
                     const periodDates = relatedPeriods.map(({ dateLabel }) => dateLabel);
@@ -158,27 +120,24 @@ const categoryLabel = (post: (typeof allPosts)[number]) => post.data.category ==
                           <ViewCount path={`${base}posts/${post.id}/`} label="瀏覽" />
                         </a>
                         <button class="timeline-stage-toggle" type="button" data-stage-toggle data-post-id={post.id} aria-pressed="false" aria-describedby={datesDescriptionId}>
-                          由此開始 · 涉及 {relatedPeriods.length} 個時段
+                          涉及 {relatedPeriods.length} 個時段
                         </button>
                       </article>
                     );
                   })}
                 </div>
-              ) : (
-                <p class="development-stage-empty">目前未有文章連結到這個階段。</p>
               )}
             </div>
           </li>
         ))}
       </ol>
 
-      <section class="unconfirmed-posts" aria-labelledby="unconfirmed-title">
-        <div class="section-heading">
-          <div><p class="section-kicker">文章索引</p><h3 id="unconfirmed-title">未能核實時段</h3></div>
-          <span class="section-count">{unconfirmedPosts.length} 篇</span>
-        </div>
-        <p>這些文章目前沒有足夠的內容證據連結到以上時段。發表日期會保留為文章資訊，不作階段推定。</p>
-        {unconfirmedPosts.length > 0 ? (
+      {unconfirmedPosts.length > 0 && (
+        <section class="unconfirmed-posts" aria-labelledby="unconfirmed-title">
+          <div class="section-heading">
+            <h3 id="unconfirmed-title">其他文章</h3>
+            <span class="section-count">{unconfirmedPosts.length} 篇</span>
+          </div>
           <ul class="unconfirmed-list">
             {unconfirmedPosts.map((post) => (
               <li>
@@ -189,18 +148,8 @@ const categoryLabel = (post: (typeof allPosts)[number]) => post.data.category ==
               </li>
             ))}
           </ul>
-        ) : (
-          <p class="development-stage-empty">目前沒有需要列在這裏的文章。</p>
-        )}
-      </section>
-    </section>
-
-    <section class="archive-section purpose-section" aria-labelledby="material-design-title">
-      <div class="section-heading">
-        <div><p class="section-kicker">專題檔案</p><h2 id="material-design-title">教材設計記錄</h2></div>
-        <a class="read-link" href={`${base}material-design/`}>查看記錄 <span aria-hidden="true">↗</span></a>
-      </div>
-      <p class="home-intro-copy">由學習目標、題目與互動活動，到試用觀察及修訂，記下每份教材背後的設計思路。</p>
+        </section>
+      )}
     </section>
   </div>
 
