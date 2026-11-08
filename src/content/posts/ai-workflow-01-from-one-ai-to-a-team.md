@@ -5,6 +5,13 @@ description: "一位香港中學數學老師回顧如何由 Gemini 課堂小遊�
 category: notes
 series: ai-workflow
 seriesPart: 1
+idea:
+  name: 一個數學老師的 AI 協作流程
+  status: build
+  log:
+    - stage: build
+      date: 2026-10-18
+      summary: 第 1 講出版，其餘 3 講製作中。
 developmentStages:
   - 2025-november
   - 2026-march

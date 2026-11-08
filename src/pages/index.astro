@@ -2,144 +2,226 @@
 import Layout from '../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 import ViewCount from '../components/ViewCount.astro';
-import { AI_WORKFLOW_TIMELINE } from '../data/ai-workflow-timeline';
+import { AI_WORKFLOW_SERIES, AI_WORKFLOW_TIMELINE } from '../data/ai-workflow-timeline';
 
 const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
 const allPosts = await getCollection('posts');
-const countedPosts = allPosts.filter(({ data }) => !data.idea);
-const materialRecordCount = countedPosts.filter(({ data }) => data.category === 'material-design').length;
-const experimentCount = countedPosts.length - materialRecordCount;
+const ideaPosts = allPosts.filter(({ data }) => data.idea !== undefined);
+const activeIdeaCount = ideaPosts.filter(({ data }) => data.idea!.status === 'build' || data.idea!.status === 'update').length;
+const conceptIdeaCount = ideaPosts.filter(({ data }) => data.idea!.status === 'concept').length;
+const publishedSeriesPosts = allPosts.filter(
+  (post) => post.data.series === AI_WORKFLOW_SERIES.id && typeof post.data.seriesPart === 'number',
+);
+const publishedByPart = new Map(publishedSeriesPosts.map((post) => [post.data.seriesPart!, post] as const));
+const latestEpisode = [...AI_WORKFLOW_SERIES.episodes].reverse().find((episode) => publishedByPart.has(episode.part));
+const latestSeriesPost = latestEpisode ? publishedByPart.get(latestEpisode.part) : undefined;
+const timelineEntries = allPosts.flatMap((post) => {
+  const relatedPeriods = AI_WORKFLOW_TIMELINE.filter((period) => post.data.developmentStages?.includes(period.id));
+  return relatedPeriods.length > 0 ? [{ post, relatedPeriods, startPeriod: relatedPeriods[0]! }] : [];
+});
 const timelineStages = AI_WORKFLOW_TIMELINE.map((period) => ({
   period,
-  posts: allPosts
-    .filter(({ data }) => !data.idea && data.developmentStages?.includes(period.id))
-    .sort((a, b) => a.data.title.localeCompare(b.data.title, 'zh-Hant')),
+  entries: timelineEntries
+    .filter(({ startPeriod }) => startPeriod.id === period.id)
+    .sort((a, b) => a.post.data.title.localeCompare(b.post.data.title, 'zh-Hant')),
 }));
-const mappedPostIds = new Set(timelineStages.flatMap(({ posts }) => posts.map(({ id }) => id)));
 const unconfirmedPosts = allPosts
-  .filter(({ id, data }) => !data.idea && !mappedPostIds.has(id))
+  .filter(({ data }) => !data.idea && !(data.developmentStages?.length))
   .sort((a, b) => a.data.title.localeCompare(b.data.title, 'zh-Hant'));
 const formatDate = (date: Date) => date.toLocaleDateString('zh-Hant', {
   year: 'numeric',
   month: 'long',
   day: 'numeric',
 });
-const categoryLabel = (category: string) => category === 'material-design' ? '教材設計記錄' : '文章筆記';
+const categoryLabel = (post: (typeof allPosts)[number]) => post.data.category === 'material-design'
+  ? '教材設計記錄'
+  : '文章筆記';
 ---
 
 <Layout title="Zach's Blog - AI 與數學學習" description="Zach 的 AI 與數學學習部落格">
-  <section class="home-intro" aria-labelledby="home-title">
-    <div class="home-intro-main">
-      <p class="eyebrow">AI 工具 · 數學學習</p>
-      <h1 id="home-title">把複雜工具，寫成可重用的做法。</h1>
-      <p class="home-intro-copy">
-        記錄實際試過的工具、流程與判斷，讓下一次遇到同一個問題時，可以少走一點彎路。
-      </p>
-      <div class="hero-actions">
-        <a class="button button-primary" href="#development-timeline">按發展階段瀏覽 <span aria-hidden="true">↘</span></a>
-        <a class="button button-quiet" href={`${base}material-design/`}>看教材設計記錄</a>
-      </div>
-    </div>
-    <aside class="home-intro-note">
-      <div class="note-heading"><span>正在建立</span><span class="note-index">01</span></div>
-      <strong>一個可重用的教學實驗檔案。</strong>
-      <p>從第一個 prompt 到最後一次 review，把決定留下來，讓教材可以繼續進步。</p>
-      <span class="note-rule" aria-hidden="true"></span>
-      <span class="note-meta">香港 · 持續更新</span>
-    </aside>
-  </section>
-
-  <section class="home-stats" aria-label="網站概覽">
-    <div class="stat-card"><span class="stat-value">{experimentCount}</span><span class="stat-label">篇實驗筆記</span></div>
-    <div class="stat-card"><span class="stat-value">{materialRecordCount}</span><span class="stat-label">份教材記錄</span></div>
-    <div class="stat-card"><span class="stat-value">AI × Math</span><span class="stat-label">主要探索方向</span></div>
-  </section>
-
-  <section id="development-timeline" class="archive-section home-development-timeline" aria-labelledby="development-timeline-title">
-    <div class="section-heading">
-      <div><p class="section-kicker">文章索引</p><h2 id="development-timeline-title">按實際發展階段瀏覽</h2></div>
-      <span class="section-count">{countedPosts.length} 篇文章</span>
-    </div>
-    <p class="home-development-timeline-intro">
-      時段依已記錄的發展階段排列；每篇文章的發表日期只作資訊，不用來推定所屬時段。一篇文章可以出現在多個階段。未能核實時段的文章列於時間線末端。
-    </p>
-
-    <ol class="development-stage-list">
-      {timelineStages.map(({ period, posts }) => (
-        <li id={`stage-${period.id}`} class="development-stage">
-          <header class="development-stage-heading">
-            <p class="development-stage-date">{period.dateLabel}</p>
-            <h3>{period.title}</h3>
-          </header>
-          <div class="development-stage-content">
-            {period.tabs.flatMap((tab) => tab.paragraphs).map((paragraph) => (
-              <p class="development-stage-summary">{paragraph}</p>
-            ))}
-            {posts.length > 0 ? (
-              <div class="post-list development-stage-posts">
-                {posts.map((post) => (
-                  <a class="post-row" href={`${base}posts/${post.id}/`}>
-                    <span class="post-row-arrow" aria-hidden="true">↗</span>
-                    <span class="post-row-copy">
-                      <span class="post-label">{categoryLabel(post.data.category)}</span>
-                      <h3>{post.data.title}</h3>
-                      {post.data.description && <span>{post.data.description}</span>}
-                    </span>
-                    <span class="post-row-meta">
-                      <time datetime={post.data.pubDate.toISOString()}>發表 {formatDate(post.data.pubDate)}</time>
-                      <ViewCount path={`${base}posts/${post.id}/`} label="瀏覽" />
-                    </span>
-                  </a>
-                ))}
-              </div>
-            ) : (
-              <p class="development-stage-empty">目前未有文章連結到這個階段。</p>
-            )}
-          </div>
-        </li>
-      ))}
-
-      <li id="stage-to-confirm" class="development-stage development-stage-unconfirmed">
-        <header class="development-stage-heading">
-          <p class="development-stage-date">時期待確認</p>
-          <h3>未能核實所屬階段</h3>
-        </header>
-        <div class="development-stage-content">
-          <p class="development-stage-summary">
-            這些文章目前沒有足夠的內容證據連結到以上時段。發表日期會保留為文章資訊，不作階段推定。
-          </p>
-          {unconfirmedPosts.length > 0 ? (
-            <div class="post-list development-stage-posts">
-              {unconfirmedPosts.map((post) => (
-                <a class="post-row" href={`${base}posts/${post.id}/`}>
-                  <span class="post-row-arrow" aria-hidden="true">↗</span>
-                  <span class="post-row-copy">
-                    <span class="post-label">{categoryLabel(post.data.category)}</span>
-                    <h3>{post.data.title}</h3>
-                    {post.data.description && <span>{post.data.description}</span>}
-                  </span>
-                  <span class="post-row-meta">
-                    <time datetime={post.data.pubDate.toISOString()}>發表 {formatDate(post.data.pubDate)}</time>
-                    <ViewCount path={`${base}posts/${post.id}/`} label="瀏覽" />
-                  </span>
-                </a>
-              ))}
-            </div>
-          ) : (
-            <p class="development-stage-empty">目前所有文章均已連結到已記錄階段。</p>
-          )}
+  <section class="home-hero grid-paper" aria-labelledby="home-title">
+    <div class="page-container home-hero-inner">
+      <div class="home-hero-copy">
+        <p class="eyebrow">AI × 教學 × 生活</p>
+        <h1 id="home-title">把複雜工具，寫成<span class="highlighter">可重用</span>的做法。</h1>
+        <p class="home-intro-copy">
+          記錄實際試過的工具、流程與判斷，讓下一次遇到同一個問題時，可以少走一點彎路。
+        </p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#development-timeline">按發展階段瀏覽 <span aria-hidden="true">↘</span></a>
         </div>
-      </li>
-    </ol>
+      </div>
+
+      <aside class="in-progress-card" aria-label="正在進行">
+        <p class="in-progress-kicker">正在進行</p>
+        {latestEpisode && latestSeriesPost ? (
+          <a class="in-progress-series" href={`${base}posts/${latestSeriesPost.id}/`}>
+            <span class="in-progress-meta">系列 · 第 {String(latestEpisode.part).padStart(2, '0')}／{String(AI_WORKFLOW_SERIES.episodes.length).padStart(2, '0')} 講 · {latestEpisode.title}</span>
+            <strong>{AI_WORKFLOW_SERIES.title}</strong>
+            <span class="series-progress-track" role="img" aria-label={`已出版 ${publishedByPart.size} 講，共 ${AI_WORKFLOW_SERIES.episodes.length} 講`}>
+              {AI_WORKFLOW_SERIES.episodes.map((episode) => (
+                <span class:list={{ 'is-published': publishedByPart.has(episode.part) }} aria-hidden="true"></span>
+              ))}
+            </span>
+          </a>
+        ) : (
+          <p class="in-progress-series-empty">即將推出</p>
+        )}
+        <a class="in-progress-ideas" href={`${base}ideas/`}>
+          <span class="in-progress-meta">想法紀錄</span>
+          <strong>{ideaPosts.length} 個想法 · {activeIdeaCount} 製作中 · {conceptIdeaCount} 構思中</strong>
+          <span>看想法紀錄 <span aria-hidden="true">↗</span></span>
+        </a>
+      </aside>
+    </div>
   </section>
 
-  <section class="archive-section purpose-section" aria-labelledby="material-design-title">
-    <div class="section-heading">
-      <div><p class="section-kicker">專題檔案</p><h2 id="material-design-title">教材設計記錄</h2></div>
-      <a class="read-link" href={`${base}material-design/`}>查看記錄 <span aria-hidden="true">↗</span></a>
-    </div>
-    <p class="home-intro-copy">由學習目標、題目與互動活動，到試用觀察及修訂，記下每份教材背後的設計思路。</p>
-  </section>
+  <div class="page-container">
+    <section id="development-timeline" class="archive-section home-development-timeline" aria-labelledby="development-timeline-title">
+      <div class="section-heading">
+        <div><p class="section-kicker">文章索引</p><h2 id="development-timeline-title">按實際發展階段瀏覽</h2></div>
+        <span class="section-count">{timelineEntries.length + unconfirmedPosts.length} 篇文章</span>
+      </div>
+      <p class="home-development-timeline-intro">
+        每篇文章列在開始的時段；指向或點選文章，相關時段會亮起。
+      </p>
+
+      <ol class="development-stage-list" data-development-timeline>
+        {timelineStages.map(({ period, entries }) => (
+          <li id={`stage-${period.id}`} class="development-stage" data-stage-id={period.id}>
+            <p class="development-stage-date">{period.dateLabel}</p>
+            <span class="development-stage-track" aria-hidden="true">
+              <span class="development-stage-line"></span>
+              <span class="development-stage-dot"></span>
+            </span>
+            <div class="development-stage-content">
+              <h3>{period.title}</h3>
+              {period.tabs.flatMap((tab) => tab.paragraphs).map((paragraph) => (
+                <p class="development-stage-summary">{paragraph}</p>
+              ))}
+              {entries.length > 0 && (
+                <div class="timeline-post-list">
+                  {entries.map(({ post, relatedPeriods }) => {
+                    const periodDates = relatedPeriods.map(({ dateLabel }) => dateLabel);
+                    const datesDescriptionId = `related-periods-${post.id}`;
+                    const stageIds = relatedPeriods.map(({ id }) => id).join(' ');
+                    return (
+                      <article class="timeline-post" data-stage-post data-stages={stageIds}>
+                        <span id={datesDescriptionId} class="sr-only">相關時段：{periodDates.join('、')}</span>
+                        <a class="timeline-post-link" href={`${base}posts/${post.id}/`} aria-describedby={datesDescriptionId}>
+                          <span class="timeline-post-topline">
+                            <span class="post-label">{categoryLabel(post)}</span>
+                            <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
+                          </span>
+                          <strong>{post.data.title}</strong>
+                          {post.data.description && <span class="timeline-post-description">{post.data.description}</span>}
+                          <ViewCount path={`${base}posts/${post.id}/`} label="瀏覽" />
+                        </a>
+                        <button class="timeline-stage-toggle" type="button" data-stage-toggle data-post-id={post.id} aria-pressed="false" aria-describedby={datesDescriptionId}>
+                          涉及 {relatedPeriods.length} 個時段
+                        </button>
+                      </article>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </li>
+        ))}
+      </ol>
+
+      {unconfirmedPosts.length > 0 && (
+        <section class="unconfirmed-posts" aria-labelledby="unconfirmed-title">
+          <div class="section-heading">
+            <h3 id="unconfirmed-title">其他文章</h3>
+            <span class="section-count">{unconfirmedPosts.length} 篇</span>
+          </div>
+          <ul class="unconfirmed-list">
+            {unconfirmedPosts.map((post) => (
+              <li>
+                <a class="unconfirmed-post" href={`${base}posts/${post.id}/`}>
+                  <span>{categoryLabel(post)} · {formatDate(post.data.pubDate)}</span>
+                  <strong>{post.data.title}</strong>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+    </section>
+  </div>
+
+  <script is:inline>
+    const timelineRoot = document.querySelector('[data-development-timeline]');
+    if (timelineRoot) {
+      const posts = Array.from(timelineRoot.querySelectorAll('[data-stage-post]'));
+      const stages = Array.from(timelineRoot.querySelectorAll('[data-stage-id]'));
+      let selectedPostId = null;
+      let hoveredPostId = null;
+      let focusedPostId = null;
+
+      const setHighlight = (postId) => {
+        const activePost = posts.find((post) => post.querySelector('[data-stage-toggle]')?.dataset.postId === postId);
+        const activeStages = new Set((activePost?.dataset.stages || '').split(/\s+/).filter(Boolean));
+        stages.forEach((stage) => {
+          const related = activeStages.has(stage.dataset.stageId);
+          stage.classList.toggle('is-highlighted', Boolean(postId) && related);
+          stage.classList.toggle('is-dimmed', Boolean(postId) && !related);
+        });
+        posts.forEach((post) => {
+          const button = post.querySelector('[data-stage-toggle]');
+          const isSelected = button?.dataset.postId === selectedPostId;
+          button?.setAttribute('aria-pressed', String(Boolean(isSelected)));
+          post.classList.toggle('is-active', button?.dataset.postId === postId);
+        });
+      };
+
+      posts.forEach((post) => {
+        const button = post.querySelector('[data-stage-toggle]');
+        const postId = button?.dataset.postId;
+        post.addEventListener('pointerenter', (event) => {
+          if (event.pointerType === 'touch') return;
+          hoveredPostId = postId || null;
+          setHighlight(hoveredPostId || focusedPostId || selectedPostId);
+        });
+        post.addEventListener('pointerleave', (event) => {
+          if (event.pointerType === 'touch') return;
+          hoveredPostId = null;
+          setHighlight(focusedPostId || selectedPostId);
+        });
+        post.addEventListener('focusin', (event) => {
+          focusedPostId = event.target.matches(':focus-visible') ? (postId || null) : null;
+          setHighlight(hoveredPostId || focusedPostId || selectedPostId);
+        });
+        post.addEventListener('focusout', (event) => {
+          if (event.relatedTarget instanceof Element && post.contains(event.relatedTarget) && event.relatedTarget.matches(':focus-visible')) {
+            focusedPostId = postId || null;
+            setHighlight(hoveredPostId || focusedPostId || selectedPostId);
+            return;
+          }
+          focusedPostId = null;
+          setHighlight(hoveredPostId || selectedPostId);
+        });
+        button?.addEventListener('click', () => {
+          selectedPostId = selectedPostId === postId ? null : (postId || null);
+          setHighlight(hoveredPostId || focusedPostId || selectedPostId);
+        });
+      });
+
+      document.addEventListener('click', (event) => {
+        if (timelineRoot.contains(event.target)) return;
+        selectedPostId = null;
+        hoveredPostId = null;
+        focusedPostId = null;
+        setHighlight(null);
+      });
+      document.addEventListener('keydown', (event) => {
+        if (event.key !== 'Escape' || !selectedPostId) return;
+        selectedPostId = null;
+        setHighlight(hoveredPostId || focusedPostId);
+      });
+    }
+  </script>
 </Layout>
