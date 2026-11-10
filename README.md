@@ -65,6 +65,23 @@ category: material-design
 
 流程使用的 Assessment 參考檔案：[`exam/mimic/auto_templates_exam.json`](https://github.com/ai-lish/Assessments/blob/main/exam/mimic/auto_templates_exam.json)（變式模板）、[`exam/mimic/generate.js`](https://github.com/ai-lish/Assessments/blob/main/exam/mimic/generate.js)（變數替換）、[`templates/student.html`](https://github.com/ai-lish/Assessments/blob/main/templates/student.html)（學生版外殼）、[`question-bank.json`](https://github.com/ai-lish/Assessments/blob/main/question-bank.json)（正式題目資料）、[`exercises/README.md`](https://github.com/ai-lish/Assessments/blob/main/exercises/README.md)（輸出規則）和 [`scripts/publish_exercise.cjs`](https://github.com/ai-lish/Assessments/blob/main/scripts/publish_exercise.cjs)（發佈交接）。記錄頁內附有可交給任一 agent 的完整提示語。
 
+### 經濟學數學實作體驗
+
+專頁路徑為 `/zach-ai-blog/econ-math/`。新增文章時，在 frontmatter 加上 `category: econ-math`，便會按日期列入專欄。文章記錄把經濟學、金融數學概念用在影片製作和模擬交易實驗時的過程與心得。
+
+涉及模擬交易時，內文須註明該實驗只屬模擬、不構成投資建議。沒有核實紀錄的報酬、回測或成交數字不要寫入文章。
+
+導覽列維持現狀，未加入此專欄入口。
+
+```yaml
+---
+title: "文章標題"
+pubDate: 2026-11-10
+description: "這篇文章記錄的實作過程。"
+category: econ-math
+---
+```
+
 ### 瀏覽次數設定
 
 GitHub Pages 只提供靜態檔案，不能在 repo 內直接累積全站數字。網站已預留 GoatCounter 整合：在 GoatCounter 建立網站後，於 GitHub repo 的 **Settings → Secrets and variables → Actions → Variables** 新增 `PUBLIC_GOATCOUNTER_CODE`（填入 site code），下一次 Pages build 便會在每篇文章及頁尾顯示全站瀏覽次數。未設定或統計服務暫時不可用時，介面會退回顯示該瀏覽器的本機次數，並標示「本機瀏覽」。

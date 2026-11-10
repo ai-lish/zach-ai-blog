@@ -8,7 +8,7 @@ const posts = defineCollection({
     title: z.string(),
     pubDate: z.date(),
     description: z.string().optional(),
-    category: z.enum(['notes', 'material-design']).default('notes'),
+    category: z.enum(['notes', 'material-design', 'econ-math']).default('notes'),
     cover: z.string().optional(),
     series: z.string().optional(),
     seriesPart: z.number().int().positive().optional(),

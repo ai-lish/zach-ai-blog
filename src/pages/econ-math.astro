@@ -1,0 +1,55 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import ViewCount from '../components/ViewCount.astro';
+
+const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
+const posts = (await getCollection('posts', ({ data }) => data.category === 'econ-math'))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<Layout title="經濟學數學實作體驗 | Zach's Blog" description="記錄把經濟學與金融數學概念用在影片製作和模擬交易實驗時的過程與心得。模擬交易只屬模擬，不構成投資建議。">
+  <section class="page-hero grid-paper" aria-labelledby="econ-math-title">
+    <div class="page-container home-intro">
+      <div class="home-intro-main">
+        <p class="eyebrow">經濟 · 金融數學 · 實作筆記</p>
+        <h1 id="econ-math-title">經濟學數學實作體驗</h1>
+        <p class="home-intro-copy">把經濟學和金融數學的概念拿到實際工作裏試用，並把過程與心得留下來。目前包括公開影片，以及只屬模擬的美股交易實驗。這裏按日期列出這個專欄的文章。</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#econ-math-list">瀏覽專欄文章 <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+      <aside class="home-intro-note">
+        <div class="note-heading"><span>閱讀前</span><span class="note-index">04</span></div>
+        <strong>模擬交易只屬模擬</strong>
+        <p>專欄提及的交易實驗都是 paper trading，不構成投資建議，也不代表真實帳戶的盈虧。</p>
+        <span class="note-rule" aria-hidden="true"></span>
+        <span class="note-meta">過程 · 心得 · 不寫未核實數字</span>
+      </aside>
+    </div>
+  </section>
+
+  <section id="econ-math-list" class="archive-section page-container" aria-labelledby="econ-math-list-title">
+    <div class="section-heading">
+      <div><p class="section-kicker">專欄文章</p><h2 id="econ-math-list-title">所有文章</h2></div>
+      <span class="section-count">{posts.length} 篇</span>
+    </div>
+    <div class="post-list">
+      {posts.map((post) => (
+        <a class="post-row" href={`${base}posts/${post.id}/`}>
+          <span class="post-row-arrow" aria-hidden="true">↗</span>
+          <span class="post-row-copy">
+            <span class="post-label">經濟學數學實作體驗</span>
+            <h3>{post.data.title}</h3>
+            {post.data.description && <span>{post.data.description}</span>}
+          </span>
+          <span class="post-row-meta">
+            <time datetime={post.data.pubDate.toISOString()}>{post.data.pubDate.toLocaleDateString('zh-Hant', { year: 'numeric', month: 'long', day: 'numeric' })}</time>
+            <ViewCount path={`${base}posts/${post.id}/`} label="瀏覽" />
+          </span>
+        </a>
+      ))}
+    </div>
+    {posts.length === 0 && <p class="empty-state">暫時未有這個專欄的文章。</p>}
+  </section>
+</Layout>

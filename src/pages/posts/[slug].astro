@@ -18,6 +18,7 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content } = await render(post);
 const isMaterialDesign = post.data.category === 'material-design';
+const isEconMath = post.data.category === 'econ-math';
 const isAiWorkflow = post.data.series === AI_WORKFLOW_SERIES.id;
 const idea = post.data.idea;
 const ideaStageLabel = idea
@@ -30,9 +31,9 @@ const siteUrl = Astro.site ?? new URL('https://ai-lish.github.io');
 const postUrl = new URL(`${base}posts/${post.id}/`, siteUrl).toString();
 const postTitle = post.data.title;
 const coverUrl = post.data.cover ? `${base}${post.data.cover}` : undefined;
-const backHref = post.data.series ? base : isMaterialDesign ? `${base}material-design/` : idea ? `${base}ideas/` : base;
-const backLabel = post.data.series ? '← 所有文章' : isMaterialDesign ? '← 教材設計記錄' : idea ? '← 返回想法頁' : '← 所有文章';
-const categoryLabel = isMaterialDesign ? '教材設計記錄' : post.data.cover ? '本地 AI 實戰' : '部落格筆記';
+const backHref = post.data.series ? base : isMaterialDesign ? `${base}material-design/` : isEconMath ? `${base}econ-math/` : idea ? `${base}ideas/` : base;
+const backLabel = post.data.series ? '← 所有文章' : isMaterialDesign ? '← 教材設計記錄' : isEconMath ? '← 經濟學數學實作體驗' : idea ? '← 返回想法頁' : '← 所有文章';
+const categoryLabel = isMaterialDesign ? '教材設計記錄' : isEconMath ? '經濟學數學實作體驗' : post.data.cover ? '本地 AI 實戰' : '部落格筆記';
 const seriesPartLabel = typeof post.data.seriesPart === 'number'
   ? `第 ${String(post.data.seriesPart).padStart(2, '0')}／${String(AI_WORKFLOW_SERIES.episodes.length).padStart(2, '0')} 講`
   : undefined;
