@@ -2,6 +2,18 @@
 import Layout from '../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 import ViewCount from '../components/ViewCount.astro';
+import YouTubeEmbed from '../components/YouTubeEmbed.astro';
+
+const learningVideos = [
+  {
+    videoId: '68tErtdYi9o',
+    title: '夏普比率是什麼？粵語｜普通話｜English｜日本語 Sharpe Ratio Explained',
+  },
+  {
+    videoId: 'AXMgibo8m-g',
+    title: '按波幅分配資金？粵語｜普通話｜English｜日本語 Volatility Sizing Explained',
+  },
+];
 
 const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
 const posts = (await getCollection('posts', ({ data }) => data.category === 'econ-math'))
@@ -29,6 +41,16 @@ const posts = (await getCollection('posts', ({ data }) => data.category === 'eco
     </div>
   </section>
 
+  <section id="econ-math-videos" class="archive-section page-container" aria-labelledby="econ-math-videos-title">
+    <div class="section-heading">
+      <div><p class="section-kicker">學習影片</p><h2 id="econ-math-videos-title">公開影片</h2></div>
+    </div>
+    <p class="econ-math-video-intro">這兩條是 YouTube 頻道「與數學做朋友」已經公開的學習影片，可以直接在這一頁播放。</p>
+    {learningVideos.map((video) => (
+      <YouTubeEmbed videoId={video.videoId} title={video.title} />
+    ))}
+  </section>
+
   <section id="econ-math-list" class="archive-section page-container" aria-labelledby="econ-math-list-title">
     <div class="section-heading">
       <div><p class="section-kicker">專欄文章</p><h2 id="econ-math-list-title">所有文章</h2></div>
@@ -53,3 +75,11 @@ const posts = (await getCollection('posts', ({ data }) => data.category === 'eco
     {posts.length === 0 && <p class="empty-state">暫時未有這個專欄的文章。</p>}
   </section>
 </Layout>
+
+<style>
+  .econ-math-video-intro {
+    max-width: 42rem;
+    margin: 0 0 1.4rem;
+    color: var(--muted);
+  }
+</style>

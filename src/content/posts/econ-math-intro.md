@@ -22,10 +22,21 @@ developmentStages: []
 
 ## 公開影片
 
-影片放在頻道 [與數學做朋友 Math's Friend](https://www.youtube.com/channel/UCdEkIPE33ZAYFwLIeLnrtEg)。與此專欄直接相關、已經公開的兩條是：
+影片放在頻道 [與數學做朋友 Math's Friend](https://www.youtube.com/channel/UCdEkIPE33ZAYFwLIeLnrtEg)。與此專欄直接相關、已經公開的兩條學習影片嵌在下面，也可以到 YouTube 開啟。
 
-- [夏普比率是什麼？粵語｜普通話｜English｜日本語 Sharpe Ratio Explained](https://www.youtube.com/watch?v=68tErtdYi9o)
-- [按波幅分配資金？粵語｜普通話｜English｜日本語 Volatility Sizing Explained](https://www.youtube.com/watch?v=AXMgibo8m-g)
+<figure>
+  <div style="position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;border:1px solid var(--rule);border-radius:11px;background:#13203a;">
+    <iframe src="https://www.youtube-nocookie.com/embed/68tErtdYi9o" title="夏普比率是什麼？粵語｜普通話｜English｜日本語 Sharpe Ratio Explained" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:0;"></iframe>
+  </div>
+  <figcaption><a href="https://www.youtube.com/watch?v=68tErtdYi9o">夏普比率是什麼？粵語｜普通話｜English｜日本語 Sharpe Ratio Explained</a></figcaption>
+</figure>
+
+<figure>
+  <div style="position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;border:1px solid var(--rule);border-radius:11px;background:#13203a;">
+    <iframe src="https://www.youtube-nocookie.com/embed/AXMgibo8m-g" title="按波幅分配資金？粵語｜普通話｜English｜日本語 Volatility Sizing Explained" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:0;"></iframe>
+  </div>
+  <figcaption><a href="https://www.youtube.com/watch?v=AXMgibo8m-g">按波幅分配資金？粵語｜普通話｜English｜日本語 Volatility Sizing Explained</a></figcaption>
+</figure>
 
 兩條片分別處理 Sharpe Ratio，以及按波幅分配資金（volatility sizing）。之後若寫到同一題目，會補充製作時的取捨，不會補上影片沒有提供、這裏也尚未核實的數據。
 
