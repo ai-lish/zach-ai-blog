@@ -35,9 +35,11 @@ const formatDate = (date: Date) => date.toLocaleDateString('zh-Hant', {
   month: 'long',
   day: 'numeric',
 });
-const categoryLabel = (post: (typeof allPosts)[number]) => post.data.category === 'material-design'
-  ? '教材設計記錄'
-  : '文章筆記';
+const categoryLabel = (post: (typeof allPosts)[number]) => {
+  if (post.data.category === 'material-design') return '教材設計記錄';
+  if (post.data.category === 'econ-math') return '經濟學數學實作體驗';
+  return '文章筆記';
+};
 ---
 
 <Layout title="Zach's Blog - AI 與數學學習" description="Zach 的 AI 與數學學習部落格">
