@@ -6,7 +6,7 @@ category: econ-math
 developmentStages: []
 ---
 
-這個專欄記錄把經濟學和金融數學概念拿到實際工作裏試用的過程與心得。目前的試用有兩部分：為 YouTube 頻道「與數學做朋友」製作公開影片，以及進行美股模擬交易實驗。
+這個專欄記錄把經濟學和金融數學概念拿到實際工作裏試用的過程與心得。目前的試用有兩部分：為 YouTube 頻道「與數學做朋友」製作學習影片，以及進行美股模擬交易實驗。頻道上現有影片已安排設為私人，並以 AI 重製；重製版本尚未公開。
 
 > **模擬交易只屬模擬，不構成投資建議。** 本專欄提到的交易實驗都是 paper trading，並非真實帳戶的買賣，也不代表任何可執行的投資方法。文章只記過程、規則設計和心得；沒有核實紀錄的報酬、回測或成交數字，不會寫進來。
 
@@ -20,25 +20,27 @@ developmentStages: []
 - 實際做了甚麼，例如組織影片例子，或寫下模擬實驗的規則
 - 做完之後的心得，以及仍然未驗證的部分
 
-## 公開影片
+## 學習影片
 
-影片放在頻道 [與數學做朋友 Math's Friend](https://www.youtube.com/channel/UCdEkIPE33ZAYFwLIeLnrtEg)。與此專欄直接相關、已經公開的兩條學習影片嵌在下面，也可以到 YouTube 開啟。
+頻道「與數學做朋友」（@mathsfriend2705）與此專欄相關的兩條既有影片，狀態是安排設為私人／重製中，AI 重製中／暫停公開。下架尚未核實完成，重製影片也還沒有新網址。舊影片 ID 只作追蹤，這裡不再提供觀看連結。
+
+在私人化完成核實前，下面的既有播放器可能仍會顯示。請勿把它們當作仍可公開觀看的內容。
 
 <figure>
   <div style="position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;border:1px solid var(--rule);border-radius:11px;background:#13203a;">
     <iframe src="https://www.youtube-nocookie.com/embed/68tErtdYi9o" title="夏普比率是什麼？粵語｜普通話｜English｜日本語 Sharpe Ratio Explained" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:0;"></iframe>
   </div>
-  <figcaption><a href="https://www.youtube.com/watch?v=68tErtdYi9o">夏普比率是什麼？粵語｜普通話｜English｜日本語 Sharpe Ratio Explained</a></figcaption>
+  <figcaption>夏普比率是什麼？粵語｜普通話｜English｜日本語 Sharpe Ratio Explained。舊影片 ID：68tErtdYi9o。AI 重製中／暫停公開。</figcaption>
 </figure>
 
 <figure>
   <div style="position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;border:1px solid var(--rule);border-radius:11px;background:#13203a;">
     <iframe src="https://www.youtube-nocookie.com/embed/AXMgibo8m-g" title="按波幅分配資金？粵語｜普通話｜English｜日本語 Volatility Sizing Explained" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:0;"></iframe>
   </div>
-  <figcaption><a href="https://www.youtube.com/watch?v=AXMgibo8m-g">按波幅分配資金？粵語｜普通話｜English｜日本語 Volatility Sizing Explained</a></figcaption>
+  <figcaption>按波幅分配資金？粵語｜普通話｜English｜日本語 Volatility Sizing Explained。舊影片 ID：AXMgibo8m-g。AI 重製中／暫停公開。</figcaption>
 </figure>
 
-兩條片分別處理 Sharpe Ratio，以及按波幅分配資金（volatility sizing）。之後若寫到同一題目，會補充製作時的取捨，不會補上影片沒有提供、這裏也尚未核實的數據。
+兩條舊片分別處理 Sharpe Ratio，以及按波幅分配資金（volatility sizing）。之後若寫到同一題目，會補充製作時的取捨，不會補上影片沒有提供、這裏也尚未核實的數據。
 
 ## 模擬交易實驗
 
@@ -47,6 +49,8 @@ developmentStages: []
 1. 現有 SMA20/SMA50 規則
 2. ATR 移動止蝕版本
 3. Dual Momentum ETF 版本
+
+原版 SMA20/SMA50 規則怎樣觸發買入與賣出，記在[模擬交易：原版規則怎樣觸發買入與賣出](/zach-ai-blog/posts/econ-math-paper-rules/)。ATR 移動止蝕版本和 Dual Momentum ETF 版本是另外兩套規則，該文沒有把它們寫進原版。
 
 比較仍在進行。在有可以核對的模擬紀錄之前，不會在本專欄寫下報酬率、回撤、交易次數或成交明細。
 

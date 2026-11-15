@@ -43,9 +43,9 @@ const posts = (await getCollection('posts', ({ data }) => data.category === 'eco
 
   <section id="econ-math-videos" class="archive-section page-container" aria-labelledby="econ-math-videos-title">
     <div class="section-heading">
-      <div><p class="section-kicker">學習影片</p><h2 id="econ-math-videos-title">公開影片</h2></div>
+      <div><p class="section-kicker">安排設為私人／重製中</p><h2 id="econ-math-videos-title">學習影片</h2></div>
     </div>
-    <p class="econ-math-video-intro">這兩條是 YouTube 頻道「與數學做朋友」已經公開的學習影片，可以直接在這一頁播放。</p>
+    <p class="econ-math-video-intro">頻道「與數學做朋友」（@mathsfriend2705）的既有影片已安排設為私人，並以 AI 重製。Sharpe Ratio 的舊影片 ID 是 68tErtdYi9o，Volatility Sizing 的舊影片 ID 是 AXMgibo8m-g。狀態：AI 重製中／暫停公開。重製版本尚未有網址，也未批准公開。在下架完成核實前，下面的播放器可能仍會顯示，請勿把它們當作仍可公開觀看的內容。</p>
     {learningVideos.map((video) => (
       <YouTubeEmbed videoId={video.videoId} title={video.title} />
     ))}
